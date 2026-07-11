@@ -1,0 +1,1621 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hako Group - Phần mềm quản lý bán hàng HakoPOS</title>
+<link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon-32.png">
+<link rel="icon" type="image/png" sizes="512x512" href="./assets/hako-logo.png">
+<link rel="apple-touch-icon" href="./assets/apple-touch-icon.png">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<template id="__bundler_thumbnail" data-bg-color="#C8102E">
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <rect width="200" height="200" fill="#C8102E"></rect>
+  <circle cx="100" cy="100" r="55" fill="#ffffff"></circle>
+  <text x="100" y="118" font-family="Arial, sans-serif" font-weight="900" font-size="60" fill="#C8102E" text-anchor="middle">H</text>
+</svg>
+</template>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet">
+<style>
+  body { margin: 0; font-family: 'Be Vietnam Pro', 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
+  * { box-sizing: border-box; }
+  a { color: #C8102E; text-decoration: none; }
+  a:hover { color: #A50D24; }
+  ::selection { background: #C8102E; color: #fff; }
+  ::placeholder { color: #B0B0B0; }
+  @keyframes hakoScroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+  /* ============ MOBILE / PHONE LAYOUT ============ */
+  @media (max-width: 860px) {
+    h1 { font-size: 34px !important; line-height: 1.2 !important; }
+    h2 { font-size: 26px !important; }
+    h3 { font-size: 20px !important; }
+
+    section, footer { padding-left: 20px !important; padding-right: 20px !important; }
+
+    [data-rg="hero"] { grid-template-columns: 1fr !important; padding-top: 100px !important; padding-bottom: 48px !important; gap: 36px !important; text-align: center; }
+    [data-rg="hero"] > div:first-child { order: 2; }
+    [data-rg="hero-actions"] { justify-content: center !important; }
+    [data-rg="hero-stats"] { justify-content: center !important; }
+
+    [data-rg="1"] { grid-template-columns: 1fr !important; }
+    [data-rg="1"] [data-rg-child="reset-order"] { order: 0 !important; }
+    [data-rg="2"] { grid-template-columns: repeat(2,1fr) !important; }
+
+    [data-rg="modal"] { grid-template-columns: 1fr !important; max-height: 88vh !important; overflow-y: auto !important; }
+
+    [data-rg="floating"] span:last-child { display: none; }
+    [data-rg="floating"] { padding: 15px !important; border-radius: 50% !important; }
+  }
+
+  @media (max-width: 560px) {
+    h1 { font-size: 28px !important; }
+    nav a { font-size: 13.5px !important; padding: 8px 12px !important; }
+  }
+
+  /* ============ TỐI ƯU MOBILE BỔ SUNG ============ */
+  @media (max-width: 860px) {
+    /* Header gọn: ẩn menu ngang, hiện nút 3 vạch */
+    header { padding: 10px 14px !important; gap: 10px !important; }
+    header img[alt="Hako Group"] { height: 38px !important; }
+    header > div:first-child span { font-size: 20px !important; }
+    #hk-menu-btn { display: block !important; }
+    header nav {
+      display: none !important;
+      position: fixed;
+      top: 62px; left: 0; right: 0;
+      background: #fff;
+      border-bottom: 1px solid #F0E3E4;
+      box-shadow: 0 14px 30px rgba(0,0,0,0.12);
+      flex-direction: column;
+      align-items: stretch !important;
+      padding: 10px 14px 16px;
+      z-index: 49;
+    }
+    body.hk-menu-open header nav { display: flex !important; }
+    header nav a {
+      font-size: 17px !important;
+      padding: 13px 14px !important;
+      border-radius: 12px !important;
+      text-align: left;
+      border-bottom: 1px solid #F7EEEF;
+    }
+    header nav a:last-child { border-bottom: none; }
+    header a[href="#dung-thu"] { font-size: 15px !important; padding: 10px 16px !important; }
+
+    /* Các lưới nhiều cột co lại cho vừa màn hình dọc */
+    [style*="grid-template-columns:repeat(3,1fr)"] { grid-template-columns: 1fr !important; }
+    [style*="grid-template-columns:repeat(4,1fr)"],
+    [style*="grid-template-columns:repeat(5,1fr)"] { grid-template-columns: repeat(2,1fr) !important; }
+    [style*="grid-template-columns:1fr 1fr"],
+    [style*="grid-template-columns:1.05fr 0.95fr"],
+    [style*="grid-template-columns:1.1fr 1fr"],
+    [style*="grid-template-columns:1.3fr 0.85fr 0.95fr 1.35fr"] { grid-template-columns: 1fr !important; }
+
+    /* Ảnh không tràn ngang, khoảng cách hợp lý hơn */
+    img { max-width: 100%; }
+    section { padding-top: 40px !important; padding-bottom: 56px !important; }
+    [style*="gap:40px"], [style*="gap:44px"], [style*="gap:48px"], [style*="gap:56px"] { gap: 24px !important; }
+    footer { padding: 44px 20px 24px !important; }
+  }
+
+  @media (max-width: 560px) {
+    header > div:first-child span { font-size: 18px !important; }
+    /* Nút ở hero xếp dọc, rộng hết cỡ cho dễ bấm */
+    [data-rg="hero-actions"] { flex-direction: column; align-items: stretch !important; gap: 12px !important; }
+    [data-rg="hero-actions"] > * { width: 100% !important; text-align: center; justify-content: center !important; }
+    [data-rg="hero-stats"] { gap: 18px !important; }
+    /* Lưới 4-5 cột chỉ còn 2 cột nhỏ gọn */
+    [style*="grid-template-columns:repeat(4,1fr)"],
+    [style*="grid-template-columns:repeat(5,1fr)"] { gap: 14px !important; }
+    section { padding-left: 16px !important; padding-right: 16px !important; }
+  }
+</style>
+</helmet>
+
+<div style="width:100%; background:#FFFFFF; color:#232323; overflow-x:hidden;">
+
+  <!-- ============ HEADER ============ -->
+  <header data-screen-label="Header" style="position:sticky; top:0; z-index:50; display:flex; align-items:center; justify-content:space-between; gap:14px; padding:16px 22px; background:rgba(255,255,255,0.96); backdrop-filter:blur(10px); border-bottom:1px solid #F0E3E4;">
+    <div onClick="{{ goHome }}" style="display:flex; align-items:center; gap:10px; flex-shrink:0; cursor:pointer;">
+      <img src="assets/hako-logo.png" alt="Hako Group" style="height: 50px; width: auto; object-fit: fill; filter: drop-shadow(0 3px 6px rgba(200,16,46,0.35));"><span style="font-weight: 900; font-size: 27px; color: #C81E2C; letter-spacing: 0.2px; white-space:nowrap; text-shadow: 0 2px 10px rgba(200,16,46,0.3), 0 1px 0 rgba(0,0,0,0.05);">HakoPOS</span>
+    </div>
+    <nav style="display:flex; align-items:center; justify-content:center; flex-wrap:wrap; row-gap:10px; column-gap:10px; flex:1; min-width:0;">
+      <a href="#" onClick="{{ goNganhHang }}" style-hover="transform:translateY(-3px); color:#C8102E;" style="{{ pillNganhHang }} font-weight:700; font-size:18.6px; white-space:nowrap; padding:11px 18px; border-radius:100px; transition:all .15s; text-shadow:0 1px 1px rgba(0,0,0,0.06); display:inline-block;">Ngành hàng</a>
+      <a href="#" onClick="{{ goBangGia }}" style-hover="transform:translateY(-3px); color:#C8102E;" style="{{ pillBangGia }} font-weight:700; font-size:18.6px; white-space:nowrap; padding:11px 18px; border-radius:100px; transition:all .15s; text-shadow:0 1px 1px rgba(0,0,0,0.06); display:inline-block;">Bảng giá</a>
+      <a href="#" onClick="{{ goTinhNang }}" style-hover="transform:translateY(-3px); color:#C8102E;" style="{{ pillTinhNang }} font-weight:700; font-size:18.6px; white-space:nowrap; padding:11px 18px; border-radius:100px; transition:all .15s; text-shadow:0 1px 1px rgba(0,0,0,0.06); display:inline-block;">Tính năng</a>
+      <a href="#" onClick="{{ goDoiTac }}" style-hover="color:#C8102E; transform:translateY(-3px);" style="color:#232323; font-weight:700; font-size:18.6px; white-space:nowrap; padding:11px 18px; border-radius:100px; transition:all .15s; text-shadow:0 1px 1px rgba(0,0,0,0.06); display:inline-block;">Đối tác</a>
+      <a href="#" onClick="{{ goLienHe }}" style-hover="color:#C8102E; transform:translateY(-3px);" style="color:#232323; font-weight:700; font-size:18.6px; white-space:nowrap; padding:11px 18px; border-radius:100px; transition:all .15s; text-shadow:0 1px 1px rgba(0,0,0,0.06); display:inline-block;">Liên hệ</a>
+      <a href="#" onClick="{{ goGioiThieu }}" style-hover="transform:translateY(-3px); color:#C8102E;" style="{{ pillGioiThieu }} font-weight:700; font-size:18.6px; white-space:nowrap; padding:11px 18px; border-radius:100px; transition:all .15s; text-shadow:0 1px 1px rgba(0,0,0,0.06); display:inline-block;">Về chúng tôi</a>
+    </nav>
+    <div style="display:flex; align-items:center; gap:10px; flex-shrink:0;">
+      <a href="#dung-thu" style-hover="transform:translateY(-3px); box-shadow:0 8px 20px rgba(200,16,46,0.4);" style="background:#C8102E; color:#fff; font-weight:700; font-size:20.25px; padding:16.5px 27px; border-radius:100px; box-shadow:0 4px 14px rgba(200,16,46,0.3); white-space:nowrap; display:inline-block; transition:all .15s ease;">Đăng Ký</a>
+      <button id="hk-menu-btn" aria-label="Mở menu" style="display:none; background:none; border:none; padding:8px; cursor:pointer;">
+        <span style="display:block; width:24px; height:3px; background:#C8102E; border-radius:2px; margin:5px 0;"></span>
+        <span style="display:block; width:24px; height:3px; background:#C8102E; border-radius:2px; margin:5px 0;"></span>
+        <span style="display:block; width:24px; height:3px; background:#C8102E; border-radius:2px; margin:5px 0;"></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ============ VỀ CHÚNG TÔI (TAB) ============ -->
+  <sc-if value="{{ isGioiThieu }}" hint-placeholder-val="{{ false }}">
+  <section data-screen-label="Về chúng tôi" style="padding:32px 48px 100px; background:#fff;">
+    <a href="#" onClick="{{ goHome }}" style="display:inline-flex; align-items:center; gap:8px; color:#C8102E; font-weight:700; font-size:14px; margin-bottom:36px;">← Quay lại trang chủ</a>
+
+    <div style="max-width:820px; margin:0 auto 64px; text-align:center;">
+      <div style="color: #C8102E; font-weight: 700; font-size: 18px; letter-spacing: 1.5px; margin-bottom: 14px">VỀ CHÚNG TÔI</div>
+      <h1 style="font-size:38px; font-weight:900; margin:0 0 22px; color:#1A1A1A; line-height:1.25;">Hành trình kiến tạo nền tảng bán hàng công nghệ số</h1>
+      <p style="font-size:17px; color:#5A5A5A; line-height:1.8; margin:0;">Mỗi cửa hàng, mỗi doanh nghiệp đều mang trong mình một khát vọng lớn — nhưng những rào cản về quản lý vận hành, thất thoát kho bãi và quy trình thanh toán phức tạp đang vô tình giữ chân bạn. Đó là lý do Hako POS ra đời: <span style="color:#C8102E; font-weight:700;">một hệ sinh thái quản lý bán hàng và thanh toán toàn diện</span>, biến những quy trình phức tạp thành trải nghiệm một chạm tinh gọn, thông minh và hiệu quả.</p>
+    </div>
+
+    <div data-rg="1" style="max-width:900px; margin:0 auto 90px; display:grid; grid-template-columns:repeat(3,1fr); gap:24px; background:#FFF8F8; border:1px solid #FBE4E6; border-radius:20px; padding:36px 24px;">
+      <div style="text-align:center;"><div style="font-size:34px; font-weight:900; color:#C8102E;">5.000+</div><div style="font-size:14px; color:#5A5A5A; font-weight:600; margin-top:6px;">Khách hàng tin dùng</div></div>
+      <div style="text-align:center; border-left:1px solid #F5D9DC; border-right:1px solid #F5D9DC;"><div style="font-size:34px; font-weight:900; color:#C8102E;">4+</div><div style="font-size:14px; color:#5A5A5A; font-weight:600; margin-top:6px;">Năm phát triển</div></div>
+      <div style="text-align:center;"><div style="font-size:34px; font-weight:900; color:#C8102E;">99%</div><div style="font-size:14px; color:#5A5A5A; font-weight:600; margin-top:6px;">Khách hàng hài lòng</div></div>
+    </div>
+
+    <div style="max-width:1100px; margin:0 auto 100px;">
+      <div style="text-align:center; max-width:700px; margin:0 auto 48px;">
+        <div style="color:#C8102E; font-weight:700; font-size:13.5px; letter-spacing:1.5px; margin-bottom:12px;">TẦM NHÌN &amp; SỨ MỆNH</div>
+        <h2 style="font-size:30px; font-weight:900; margin:0; color:#1A1A1A;">Đồng hành cùng thành công của bạn</h2>
+      </div>
+      <div data-rg="1" style="display:grid; grid-template-columns:1fr 1fr; gap:28px;">
+        <div style="background:#fff; border:1px solid #F0E3E4; border-radius:20px; padding:34px; box-shadow:0 16px 40px -26px rgba(0,0,0,0.12);">
+          <div style="font-weight:800; font-size:20px; color:#1A1A1A; margin-bottom:10px;">Sứ mệnh</div>
+          <div style="font-weight:700; font-size:15px; color:#C8102E; margin-bottom:16px; font-style:italic;">"Bình dân hóa công nghệ — Đồng hành cùng nhà bán hàng số"</div>
+          <p style="font-size:14.5px; color:#5A5A5A; line-height:1.75; margin:0;">Hako POS sinh ra để gánh vác phần việc phức tạp nhất trong vận hành. Chúng tôi cung cấp các giải pháp công nghệ dễ tiếp cận, chi phí tối ưu, giúp mọi mô hình kinh doanh — từ một xe đẩy bánh mì, quán cafe nhỏ đến chuỗi cửa hàng lớn — đều có thể chuyển đổi số dễ dàng, bứt phá doanh thu và tối ưu hóa lợi nhuận.</p>
+        </div>
+        <div style="background:#fff; border:1px solid #F0E3E4; border-radius:20px; padding:34px; box-shadow:0 16px 40px -26px rgba(0,0,0,0.12);">
+          <div style="font-weight:800; font-size:20px; color:#1A1A1A; margin-bottom:10px;">Tầm nhìn</div>
+          <div style="font-weight:700; font-size:15px; color:#C8102E; margin-bottom:16px; font-style:italic;">"Trở thành hệ sinh thái công nghệ quản lý và thanh toán số hàng đầu"</div>
+          <p style="font-size:14.5px; color:#5A5A5A; line-height:1.75; margin:0;">Không chỉ dừng lại ở một phần mềm quản lý, Hako POS định vị là một nền tảng mở thông minh, kết nối mọi mắt xích từ Quản lý — Thanh toán — Vận chuyển — đến Chăm sóc khách hàng tự động, dẫn dắt xu hướng bán hàng đa kênh (Omnichannel) tương lai.</p>
+        </div>
+      </div>
+    </div>
+
+    <div style="max-width:1100px; margin:0 auto 100px;">
+      <div style="text-align:center; max-width:700px; margin:0 auto 48px;">
+        <div style="color:#C8102E; font-weight:700; font-size:13.5px; letter-spacing:1.5px; margin-bottom:12px;">LỊCH SỬ PHÁT TRIỂN</div>
+        <h2 style="font-size:30px; font-weight:900; margin:0; color:#1A1A1A;">Những cột mốc đáng tự hào</h2>
+      </div>
+      <div data-rg="1" style="display:grid; grid-template-columns:repeat(3,1fr); gap:24px;">
+        <div style="background:#FAFAFA; border:1px solid #F0E3E4; border-radius:18px; padding:28px;">
+          <div style="width:44px; height:44px; border-radius:12px; background:#FDE8EA; color:#C8102E; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:16px; margin-bottom:16px;">01</div>
+          <div style="font-weight:800; font-size:16.5px; color:#1A1A1A; margin-bottom:10px;">Khởi nguồn từ một bài toán thực tế</div>
+          <p style="font-size:13.5px; color:#5A5A5A; line-height:1.65; margin:0;">Xuất phát từ sự thấu hiểu sâu sắc những khó khăn của các chủ doanh nghiệp SMEs và hộ kinh doanh tại Việt Nam, Hako POS được thành lập bởi đội ngũ kỹ sư công nghệ và chuyên gia tài chính tài năng, bắt đầu bằng việc số hóa những quy trình quản lý thủ công cồng kềnh nhất.</p>
+        </div>
+        <div style="background:#FAFAFA; border:1px solid #F0E3E4; border-radius:18px; padding:28px;">
+          <div style="width:44px; height:44px; border-radius:12px; background:#FDE8EA; color:#C8102E; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:16px; margin-bottom:16px;">02</div>
+          <div style="font-weight:800; font-size:16.5px; color:#1A1A1A; margin-bottom:10px;">Chuyển mình mạnh mẽ</div>
+          <p style="font-size:13.5px; color:#5A5A5A; line-height:1.65; margin:0;">Nhanh chóng bắt kịp làn sóng công nghệ, Hako POS tiên phong nâng cấp hệ thống lên nền tảng điện toán đám mây (Cloud). Sự ra đời của các dòng máy POS thông minh tích hợp thanh toán không tiền mặt đã giúp hàng ngàn cửa hàng tối ưu tốc độ vận hành lên gấp 2 lần.</p>
+        </div>
+        <div style="background:#FAFAFA; border:1px solid #F0E3E4; border-radius:18px; padding:28px;">
+          <div style="width:44px; height:44px; border-radius:12px; background:#FDE8EA; color:#C8102E; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:16px; margin-bottom:16px;">03</div>
+          <div style="font-weight:800; font-size:16.5px; color:#1A1A1A; margin-bottom:10px;">Vững bước tương lai</div>
+          <p style="font-size:13.5px; color:#5A5A5A; line-height:1.65; margin:0;">Đến nay, Hako POS tự hào là người bạn đồng hành tin cậy của hàng chục ngàn thương hiệu thuộc các ngành hàng F&amp;B, Bán lẻ và Spa/Làm đẹp. Chúng tôi liên tục nghiên cứu và ứng dụng dữ liệu lớn (Big Data) để giúp chủ doanh nghiệp đưa ra quyết định kinh doanh chính xác, đón đầu xu hướng.</p>
+        </div>
+      </div>
+    </div>
+
+    <div style="max-width:1100px; margin:0 auto 90px;">
+      <div style="text-align:center; max-width:700px; margin:0 auto 48px;">
+        <div style="color: #C8102E; font-weight: 700; font-size: 30px; letter-spacing: 1.5px; margin-bottom: 12px">GIÁ TRỊ CỐT LÕI</div>
+        <h2 style="font-size:30px; font-weight:900; margin:0; color:#1A1A1A;"><br></h2>
+      </div>
+      <div data-rg="1" style="display:grid; grid-template-columns:repeat(3,1fr); gap:24px;">
+        <div style="text-align:center; padding:8px;">
+          <div style="width:60px; height:60px; border-radius:50%; background:#FDE8EA; color:#C8102E; display:flex; align-items:center; justify-content:center; margin:0 auto 18px;"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="8" rx="4"></rect><circle cx="16" cy="12" r="2.6" fill="currentColor" stroke="none"></circle></svg></div>
+          <div style="font-weight:800; font-size:17px; color:#1A1A1A; margin-bottom:10px;">Đơn giản &amp; Hiệu quả</div>
+          <p style="font-size:14px; color:#5A5A5A; line-height:1.65; margin:0;">Công nghệ chỉ thực sự có giá trị khi bất kỳ ai cũng có thể sử dụng dễ dàng.</p>
+        </div>
+        <div style="text-align:center; padding:8px;">
+          <div style="width:60px; height:60px; border-radius:50%; background:#FDE8EA; color:#C8102E; display:flex; align-items:center; justify-content:center; margin:0 auto 18px;"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"></path></svg></div>
+          <div style="font-weight:800; font-size:17px; color:#1A1A1A; margin-bottom:10px;">Tận tâm đồng hành</div>
+          <p style="font-size:14px; color:#5A5A5A; line-height:1.65; margin:0;">Chúng tôi không chỉ bán phần mềm, chúng tôi cung cấp giải pháp và cam kết hỗ trợ khách hàng 24/7.</p>
+        </div>
+        <div style="text-align:center; padding:8px;">
+          <div style="width:60px; height:60px; border-radius:50%; background:#FDE8EA; color:#C8102E; display:flex; align-items:center; justify-content:center; margin:0 auto 18px;"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h7l-1 8 10-12h-7l1-8z"></path></svg></div>
+          <div style="font-weight:800; font-size:17px; color:#1A1A1A; margin-bottom:10px;">Tiên phong đổi mới</div>
+          <p style="font-size:14px; color:#5A5A5A; line-height:1.65; margin:0;">Không bao giờ dừng lại, Hako POS luôn liên tục cải tiến để mang lại những tính năng hiện đại nhất cho bạn.</p>
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align:center;">
+      <a href="#" onClick="{{ openModalClick }}" style-hover="transform:translateY(-4px); box-shadow:0 10px 22px rgba(200,16,46,0.35);" style="display:inline-block; background:#C8102E; color:#fff; font-weight:700; font-size:15px; padding:15px 30px; border-radius:10px; transition:all .15s ease;">Đăng ký dùng thử 10 ngày</a>
+    </div>
+  </section>
+  </sc-if>
+
+  <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+  <!-- ============ HERO ============ -->
+  <section data-screen-label="Hero" data-rg="hero" style="position:relative; padding:88px 48px 100px; background:radial-gradient(1200px 600px at 85% -10%, rgba(255,255,255,0.08), transparent 60%), linear-gradient(155deg,#1A0509 0%,#4A0A17 45%,#8A0F24 100%); display:grid; grid-template-columns:1.05fr 0.95fr; gap:56px; align-items:center; overflow:hidden;">
+    <div style="position:absolute; inset:0; opacity:0.5; background-image:radial-gradient(rgba(255,255,255,0.09) 1px, transparent 1px); background-size:26px 26px; pointer-events:none;"></div>
+    <div style="position:absolute; top:-160px; right:-120px; width:480px; height:480px; border-radius:50%; background:radial-gradient(circle,rgba(255,180,190,0.18),transparent 70%);"></div>
+    <div style="position:relative; z-index:1;">
+      <div style="display:inline-flex; align-items:center; gap:8px; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.18); backdrop-filter:blur(6px); color:#FFD9DE; font-weight:700; font-size:13px; padding:8px 16px; border-radius:100px; margin-bottom:24px;">
+        <span style="width:7px; height:7px; border-radius:50%; background:#4ADE80;"></span><span>Được hơn 5.000+ cửa hàng tin dùng</span>
+      </div>
+      <h1 style="font-size:54px; font-weight:900; line-height:1.12; margin:0 0 24px; color:#fff; letter-spacing:-1px;">
+        Phần mềm quản lý<br>bán hàng <span style="background:linear-gradient(90deg,#FF9AA6,#FFD9DE); -webkit-background-clip:text; background-clip:text; color:transparent;">toàn diện</span><br>cho mọi ngành nghề
+      </h1>
+      <p style="font-size:17.5px; line-height:1.7; color:rgba(255,255,255,0.75); max-width:500px; margin:0 0 36px;">
+        Hako POS giúp bạn quản lý bán hàng, kho, nhân viên và dòng tiền trên một nền tảng duy nhất — đơn giản, chính xác và mọi lúc mọi nơi.
+      </p>
+      <div data-rg="hero-actions" style="display:flex; gap:16px; margin-bottom:44px; flex-wrap:wrap;">
+        <a href="#dung-thu" style="display:inline-flex; align-items:center; gap:10px; background:#fff; color:#8A0F24; font-weight:800; font-size:16px; padding:17px 28px; border-radius:12px; transition:transform .15s ease, box-shadow .15s ease; box-shadow:0 16px 34px -10px rgba(0,0,0,0.45); transition:transform .15s ease, box-shadow .15s ease;" style-hover="transform:translateY(-2px); box-shadow:0 20px 40px -8px rgba(0,0,0,0.5);"><span>Dùng thử 10 ngày</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
+        <a href="#tu-van" style="background:transparent; color:#fff; font-weight:700; font-size:16px; padding:17px 28px; border-radius:12px; border:1.5px solid rgba(255,255,255,0.35); display:inline-block; transition:all .15s ease;" style-hover="background:rgba(255,255,255,0.1); border-color:rgba(255,255,255,0.6);">Nhận tư vấn miễn phí</a>
+      </div>
+      <div data-rg="hero-stats" style="display:flex; gap:32px;">
+        <div><div style="font-size:28px; font-weight:900; color:#fff;">5.000+</div><div style="font-size:13px; color:rgba(255,255,255,0.6); font-weight:600;">Cửa hàng tin dùng</div></div>
+        <div style="border-left:1px solid rgba(255,255,255,0.15); padding-left:32px;"><div style="font-size:28px; font-weight:900; color:#fff;">24/7</div><div style="font-size:13px; color:rgba(255,255,255,0.6); font-weight:600;">Hỗ trợ liên tục</div></div>
+        <div style="border-left:1px solid rgba(255,255,255,0.15); padding-left:32px;"><div style="font-size:28px; font-weight:900; color:#fff;">20+</div><div style="font-size:13px; color:rgba(255,255,255,0.6); font-weight:600;">Ngành nghề áp dụng</div></div>
+      </div>
+    </div>
+    <div style="position:relative; z-index:1;">
+      <div style="box-sizing: border-box; display: flex; flex-direction: column; gap: 12px; position:relative;"><div style="position:absolute; inset:-16px; border-radius:30px; background:linear-gradient(160deg,rgba(255,255,255,0.25),transparent 60%); filter:blur(2px); z-index:0;"></div><div style="position:relative; z-index:1; width: 100%; aspect-ratio: 4/3; border-radius: 22px; overflow: hidden; box-shadow: 0 30px 70px -20px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.15); background: url(&quot;assets/hero-pos-photo.png&quot;) center / cover no-repeat; display: flex; align-items: center; justify-content: center">
+        
+      </div></div>
+      
+    </div>
+  </section>
+
+  <!-- ============ VÌ SAO CHỌN HAKO ============ -->
+  <section data-screen-label="Vì sao chọn Hako POS" style="padding:96px 48px; background:#FAFAFA;">
+    <div style="text-align:center; max-width:640px; margin:0 auto 48px;">
+      <div style="color:#C8102E; font-weight:700; font-size:13.5px; letter-spacing:1.5px; margin-bottom:12px;">VÌ SAO CHỌN HAKO POS</div>
+      <h2 style="font-size:32px; font-weight:900; margin:0; color:#1A1A1A;">Được xây dựng cho tốc độ và sự tin cậy</h2>
+    </div>
+    <div data-rg="1" style="display:grid; grid-template-columns:repeat(3,1fr); gap:28px; max-width:1240px; margin:0 auto;">
+      <div style="padding:36px 30px; border-radius:20px; background:#fff; border:1.5px solid #F0E3E4; text-align:center; box-shadow:0 16px 40px -26px rgba(0,0,0,0.12); transition:transform .2s ease, box-shadow .2s ease;" style-hover="transform:translateY(-6px); box-shadow:0 24px 50px -20px rgba(0,0,0,0.18);">
+        <div style="width:68px; height:68px; border-radius:18px; background:linear-gradient(155deg,#E8323E,#8A0F24); display:flex; align-items:center; justify-content:center; margin:0 auto 20px; color:#fff; box-shadow:0 14px 28px -10px rgba(138,15,36,0.5);"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.5"></circle><path d="M8.5 12.5l2.3 2.3 4.7-5"></path></svg></div>
+        <div style="font-weight:900; font-size:21px; margin-bottom:12px; color:#1A1A1A;">Đơn giản &amp; dễ sử dụng</div>
+        <div style="font-size:15px; color:#5A5A5A; line-height:1.65;">Giao diện gọn gàng, trực quan — chỉ mất 15 phút để nhân viên làm quen và thao tác thành thạo.</div>
+      </div>
+      <div style="padding:36px 30px; border-radius:20px; background:#fff; border:1.5px solid #F0E3E4; text-align:center; box-shadow:0 16px 40px -26px rgba(0,0,0,0.12); transition:transform .2s ease, box-shadow .2s ease;" style-hover="transform:translateY(-6px); box-shadow:0 24px 50px -20px rgba(0,0,0,0.18);">
+        <div style="width:68px; height:68px; border-radius:18px; background:linear-gradient(155deg,#E8323E,#8A0F24); display:flex; align-items:center; justify-content:center; margin:0 auto 20px; color:#fff; box-shadow:0 14px 28px -10px rgba(138,15,36,0.5);"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12.59 2H2v10.59L12.41 22.4a2 2 0 0 0 2.83 0l7.17-7.17a2 2 0 0 0 0-2.83L12.59 2z"></path><circle cx="7" cy="7" r="1.5" fill="currentColor" stroke="none"></circle></svg></div>
+        <div style="font-weight:900; font-size:21px; margin-bottom:12px; color:#1A1A1A;">Tiết kiệm chi phí</div>
+        <div style="font-size:15px; color:#5A5A5A; line-height:1.65;">Miễn phí cài đặt, triển khai và cập nhật không mất phí. Giảm chi phí vận hành mỗi ngày.</div>
+      </div>
+      <div style="padding:36px 30px; border-radius:20px; background:#fff; border:1.5px solid #F0E3E4; text-align:center; box-shadow:0 16px 40px -26px rgba(0,0,0,0.12); transition:transform .2s ease, box-shadow .2s ease;" style-hover="transform:translateY(-6px); box-shadow:0 24px 50px -20px rgba(0,0,0,0.18);">
+        <div style="width:68px; height:68px; border-radius:18px; background:linear-gradient(155deg,#E8323E,#8A0F24); display:flex; align-items:center; justify-content:center; margin:0 auto 20px; color:#fff; box-shadow:0 14px 28px -10px rgba(138,15,36,0.5);"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="3" width="7" height="7" rx="1.5"></rect><rect x="3" y="14" width="7" height="7" rx="1.5"></rect><rect x="14" y="14" width="7" height="7" rx="1.5"></rect></svg></div>
+        <div style="font-weight:900; font-size:21px; margin-bottom:12px; color:#1A1A1A;">Phù hợp từng ngành hàng</div>
+        <div style="font-size:15px; color:#5A5A5A; line-height:1.65;">Tùy biến riêng cho hơn 20 mô hình kinh doanh, từ bán lẻ đến dịch vụ, khách sạn.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ĐỐI TÁC (trust strip) ============ -->
+  <section data-screen-label="Đối tác thanh toán" id="doi-tac" style="padding:64px 0; background:#FFF3F3; overflow:hidden;">
+    <div style="text-align:center; max-width:640px; margin:0 auto 36px; padding:0 48px;">
+      <div style="color:#C8102E; font-weight:700; font-size:13.5px; letter-spacing:1.5px; margin-bottom:12px;">ĐỐI TÁC LIÊN KẾT</div>
+      <h2 style="font-size:28px; font-weight:900; margin:0 0 12px; color:#1A1A1A;">Kết nối thanh toán liền mạch</h2>
+      
+    </div>
+    <div style="width:100%; overflow:hidden; -webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent); mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent); display:flex; justify-content:center;">
+      <div style="display:flex; align-items:center; justify-content:center; gap:56px; width:max-content; animation:hakoScroll 9s linear infinite;">
+        <div style="display:flex; align-items:center; justify-content:center; height:104px;"><img src="assets/logo-viettel.png" alt="Viettel" style="height:78px; width:auto; object-fit:contain;"></div>
+        <div style="display:flex; align-items:center; justify-content:center; height:104px;"><img src="assets/logo-mbbank.png" alt="MB Bank" style="height:72px; width:auto; object-fit:contain;"></div>
+        <div style="display:flex; align-items:center; justify-content:center; height:104px;"><img src="assets/logo-9pay.png" alt="9Pay" style="height:96px; width:auto; object-fit:contain;"></div>
+        <div style="display:flex; align-items:center; justify-content:center; height:104px;"><img src="assets/logo-momo.png" alt="MoMo" style="height:92px; width:auto; object-fit:contain;"></div>
+        <div style="display:flex; align-items:center; justify-content:center; height:104px;"><img src="assets/logo-viettel.png" alt="Viettel" style="height:78px; width:auto; object-fit:contain;"></div>
+        <div style="display:flex; align-items:center; justify-content:center; height:104px;"><img src="assets/logo-mbbank.png" alt="MB Bank" style="height:72px; width:auto; object-fit:contain;"></div>
+        <div style="display:flex; align-items:center; justify-content:center; height:104px;"><img src="assets/logo-9pay.png" alt="9Pay" style="height:96px; width:auto; object-fit:contain;"></div>
+        <div style="display:flex; align-items:center; justify-content:center; height:104px;"><img src="assets/logo-momo.png" alt="MoMo" style="height:92px; width:auto; object-fit:contain;"></div>
+      </div>
+    </div>
+
+    <div style="text-align:center; max-width:640px; margin:56px auto 30px; padding:0 48px;">
+      <div style="color:#C8102E; font-weight:700; font-size:13.5px; letter-spacing:1.5px; margin-bottom:12px;">KHÁCH HÀNG TIÊU BIỂU</div>
+      <h2 style="font-size:24px; font-weight:900; margin:0; color:#1A1A1A;">Đồng hành cùng hàng nghìn cửa hàng, quán ăn trên toàn quốc</h2>
+    </div>
+    <div style="width:100%; overflow:hidden; -webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent); mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);">
+      <div style="display:flex; align-items:center; gap:20px; width:max-content; animation:hakoScroll 30s linear infinite reverse;">
+        <span style="background:#fff; border:1px solid #F5D9DC; border-radius:100px; padding:14px 30px; font-weight:700; font-size:17px; color:#3A3A3A; white-space:nowrap;">Cafe Ông Bụt</span>
+        <span style="background:#fff; border:1px solid #F5D9DC; border-radius:100px; padding:14px 30px; font-weight:700; font-size:17px; color:#3A3A3A; white-space:nowrap;">Trà Sữa Bụi Phố</span>
+        <span style="background:#fff; border:1px solid #F5D9DC; border-radius:100px; padding:14px 30px; font-weight:700; font-size:17px; color:#3A3A3A; white-space:nowrap;">Nhà Hàng Sen Vàng</span>
+        <span style="background:#fff; border:1px solid #F5D9DC; border-radius:100px; padding:14px 30px; font-weight:700; font-size:17px; color:#3A3A3A; white-space:nowrap;">Spa Ngọc Anh</span>
+        <span style="background:#fff; border:1px solid #F5D9DC; border-radius:100px; padding:14px 30px; font-weight:700; font-size:17px; color:#3A3A3A; white-space:nowrap;">Thời Trang La Sen</span>
+        <span style="background:#fff; border:1px solid #F5D9DC; border-radius:100px; padding:14px 30px; font-weight:700; font-size:17px; color:#3A3A3A; white-space:nowrap;">Nhà Thuốc An Khang Phát</span>
+        <span style="background:#fff; border:1px solid #F5D9DC; border-radius:100px; padding:14px 30px; font-weight:700; font-size:17px; color:#3A3A3A; white-space:nowrap;">Homestay Sao Mai</span>
+        <span style="background:#fff; border:1px solid #F5D9DC; border-radius:100px; padding:14px 30px; font-weight:700; font-size:17px; color:#3A3A3A; white-space:nowrap;">Siêu Thị Mini Gia Phát</span>
+        <span style="background:#fff; border:1px solid #F5D9DC; border-radius:100px; padding:14px 30px; font-weight:700; font-size:17px; color:#3A3A3A; white-space:nowrap;">Cafe Ông Bụt</span>
+        <span style="background:#fff; border:1px solid #F5D9DC; border-radius:100px; padding:14px 30px; font-weight:700; font-size:17px; color:#3A3A3A; white-space:nowrap;">Trà Sữa Bụi Phố</span>
+        <span style="background:#fff; border:1px solid #F5D9DC; border-radius:100px; padding:14px 30px; font-weight:700; font-size:17px; color:#3A3A3A; white-space:nowrap;">Nhà Hàng Sen Vàng</span>
+        <span style="background:#fff; border:1px solid #F5D9DC; border-radius:100px; padding:14px 30px; font-weight:700; font-size:17px; color:#3A3A3A; white-space:nowrap;">Spa Ngọc Anh</span>
+        <span style="background:#fff; border:1px solid #F5D9DC; border-radius:100px; padding:14px 30px; font-weight:700; font-size:17px; color:#3A3A3A; white-space:nowrap;">Thời Trang La Sen</span>
+        <span style="background:#fff; border:1px solid #F5D9DC; border-radius:100px; padding:14px 30px; font-weight:700; font-size:17px; color:#3A3A3A; white-space:nowrap;">Nhà Thuốc An Khang Phát</span>
+        <span style="background:#fff; border:1px solid #F5D9DC; border-radius:100px; padding:14px 30px; font-weight:700; font-size:17px; color:#3A3A3A; white-space:nowrap;">Homestay Sao Mai</span>
+        <span style="background:#fff; border:1px solid #F5D9DC; border-radius:100px; padding:14px 30px; font-weight:700; font-size:17px; color:#3A3A3A; white-space:nowrap;">Siêu Thị Mini Gia Phát</span>
+      </div>
+    </div>
+  </section>
+
+  </sc-if>
+
+  <!-- ============ NGÀNH HÀNG (TAB) ============ -->
+  <sc-if value="{{ isNganhHang }}" hint-placeholder-val="{{ false }}">
+  <section data-screen-label="Ngành hàng — Tab" style="padding:32px 48px 0; background:#fff;">
+    <sc-if value="{{ isNganhHangList }}" hint-placeholder-val="{{ true }}">
+      <a href="#" onClick="{{ goHome }}" style="display:inline-flex; align-items:center; gap:8px; color:#C8102E; font-weight:700; font-size:14px;">← Quay lại trang chủ</a>
+    </sc-if>
+    <sc-if value="{{ isNganhHangDetail }}" hint-placeholder-val="{{ false }}">
+      <a href="#" onClick="{{ backToNganhHangList }}" style="display:inline-flex; align-items:center; gap:8px; color:#C8102E; font-weight:700; font-size:14px;">← Quay lại Ngành hàng</a>
+    </sc-if>
+  </section>
+  <sc-if value="{{ isNganhHangList }}" hint-placeholder-val="{{ true }}">
+  <section data-screen-label="Ngành hàng" id="nganh-hang" style="padding:32px 48px 90px; background:#fff;">
+    <div style="text-align:center; max-width:700px; margin:0 auto 56px;">
+      <div style="color:#C8102E; font-weight:700; font-size:13.5px; letter-spacing:1.5px; margin-bottom:12px;">NGÀNH HÀNG</div>
+      <h2 style="font-size:36px; font-weight:900; margin:0 0 14px; color:#1A1A1A;">Giải pháp cho mọi mô hình kinh doanh</h2>
+      <p style="font-size:16px; color:#5A5A5A; margin:0; line-height:1.6;">Hako POS được tối ưu riêng theo từng đặc thù ngành nghề, từ bán lẻ đến dịch vụ.</p>
+    </div>
+    <div data-rg="1" style="display:grid; grid-template-columns:repeat(4,1fr); gap:22px; align-items:start;">
+
+      <div style="background:#fff; border:1px solid #F0E3E4; border-radius:20px; overflow:hidden; box-shadow:0 8px 24px -14px rgba(0,0,0,0.08); transition:transform .2s ease, box-shadow .2s ease;" style-hover="transform:translateY(-6px); box-shadow:0 20px 40px -16px rgba(0,0,0,0.16);">
+        <div style="width:100%; aspect-ratio:4/3;">
+          <img src="assets/nganh-ban-le-photo.png" alt="Cửa hàng bán lẻ" style="width:100%; height:100%; object-fit:cover;">
+        </div>
+        <div style="padding:24px;">
+          <div style="font-weight:800; font-size:17px; margin-bottom:10px; color:#1A1A1A;">Bán buôn, bán lẻ</div>
+          <p style="font-size:14px; color:#5A5A5A; line-height:1.6; margin:0 0 16px;">Tối ưu quy trình bán hàng cả online và offline, tiết kiệm chi phí và thời gian quản lý vận hành.</p>
+          <a href="#" onClick="{{ goIndustryBanLe }}" style="font-weight:700; font-size:14px; color:#C8102E; display:inline-flex; align-items:center; gap:6px;">Tìm hiểu thêm →</a>
+        </div>
+      </div>
+
+      <div style="background:#fff; border:1px solid #F0E3E4; border-radius:20px; overflow:hidden; box-shadow:0 8px 24px -14px rgba(0,0,0,0.08); transition:transform .2s ease, box-shadow .2s ease;" style-hover="transform:translateY(-6px); box-shadow:0 20px 40px -16px rgba(0,0,0,0.16);">
+        <div style="width:100%; aspect-ratio:4/3;">
+          <img src="assets/nganh-fnb-photo.png" alt="Nhà hàng &amp; Cafe" style="width:100%; height:100%; object-fit:cover;">
+        </div>
+        <div style="padding:24px;">
+          <div style="font-weight:800; font-size:17px; margin-bottom:10px; color:#1A1A1A;">Ăn uống, giải trí</div>
+          <p style="font-size:14px; color:#5A5A5A; line-height:1.6; margin:0 0 16px;">Order chính xác, vận hành tối ưu. Tích hợp liền mạch các nền tảng FoodApp phổ biến.</p>
+          <a href="#" onClick="{{ goIndustryFnb }}" style="font-weight:700; font-size:14px; color:#C8102E; display:inline-flex; align-items:center; gap:6px;">Tìm hiểu thêm →</a>
+        </div>
+      </div>
+
+      <div style="background:#fff; border:1px solid #F0E3E4; border-radius:20px; overflow:hidden; box-shadow:0 8px 24px -14px rgba(0,0,0,0.08); transition:transform .2s ease, box-shadow .2s ease;" style-hover="transform:translateY(-6px); box-shadow:0 20px 40px -16px rgba(0,0,0,0.16);">
+        <div style="width:100%; aspect-ratio:4/3;">
+          <img src="assets/nganh-khach-san-photo.png" alt="Lễ tân khách sạn" style="width:100%; height:100%; object-fit:cover;">
+        </div>
+        <div style="padding:24px;">
+          <div style="font-weight:800; font-size:17px; margin-bottom:10px; color:#1A1A1A;">Khách sạn, nhà nghỉ</div>
+          <p style="font-size:14px; color:#5A5A5A; line-height:1.6; margin:0 0 16px;">Đặt lịch dễ dàng, tiết kiệm thời gian lễ tân, tích hợp các kênh đặt phòng OTA phổ biến.</p>
+          <a href="#" onClick="{{ goIndustryKhachSan }}" style="font-weight:700; font-size:14px; color:#C8102E; display:inline-flex; align-items:center; gap:6px;">Tìm hiểu thêm →</a>
+        </div>
+      </div>
+
+      <div style="background:#fff; border:1px solid #F0E3E4; border-radius:20px; overflow:hidden; box-shadow:0 8px 24px -14px rgba(0,0,0,0.08); transition:transform .2s ease, box-shadow .2s ease;" style-hover="transform:translateY(-6px); box-shadow:0 20px 40px -16px rgba(0,0,0,0.16);">
+        <div style="width:100%; aspect-ratio:4/3;">
+          <img src="assets/nganh-lam-dep-photo.png" alt="Nhân viên spa/làm đẹp" style="width:100%; height:100%; object-fit:cover;">
+        </div>
+        <div style="padding:24px;">
+          <div style="font-weight:800; font-size:17px; margin-bottom:10px; color:#1A1A1A;">Sức khỏe, làm đẹp</div>
+          <p style="font-size:14px; color:#5A5A5A; line-height:1.6; margin:0 0 16px;">Quản lý lịch hẹn, hồ sơ khách hàng và liệu trình một cách chuyên nghiệp, hiệu quả.</p>
+          <a href="#" onClick="{{ goIndustryLamDep }}" style="font-weight:700; font-size:14px; color:#C8102E; display:inline-flex; align-items:center; gap:6px;">Tìm hiểu thêm →</a>
+        </div>
+      </div>
+
+    </div>
+
+  </section>
+  </sc-if>
+
+  <!-- ============ NGÀNH HÀNG CHI TIẾT: BÁN BUÔN, BÁN LẺ ============ -->
+  <sc-if value="{{ isIndustryBanLe }}" hint-placeholder-val="{{ false }}">
+  <section data-screen-label="Ngành hàng — Bán buôn, bán lẻ" style="padding:32px 48px 90px; background:#fff;">
+    <div style="text-align:center; max-width:760px; margin:0 auto 40px;">
+      <div style="color:#C8102E; font-weight:700; font-size:13.5px; letter-spacing:1.5px; margin-bottom:12px;">BÁN BUÔN, BÁN LẺ</div>
+      <h2 style="font-size:36px; font-weight:900; margin:0 0 14px; color:#1A1A1A;">Bảng tính năng cho mô hình bán lẻ</h2>
+      <p style="font-size:16px; color:#5A5A5A; margin:0; line-height:1.6;">Toàn bộ tính năng áp dụng riêng cho cửa hàng bán buôn, bán lẻ.</p>
+    </div>
+    <div style="width:100%; max-width:1000px; aspect-ratio:21/8; border-radius:20px; overflow:hidden; box-shadow:0 20px 50px -24px rgba(0,0,0,0.14); margin:0 auto 48px;">
+      <img src="assets/nganh-ban-le-photo.png" alt="Cửa hàng bán lẻ" style="width:100%; height:100%; object-fit:cover;">
+    </div>
+    <div data-rg="1" style="display:grid; grid-template-columns:repeat(3,1fr); gap:20px; max-width:1160px; margin:0 auto;">
+      <div style="background:#FAFAFA; border:1px solid #F0E3E4; border-radius:16px; padding:22px;">
+        <div style="font-weight:800; font-size:16px; color:#1A1A1A; margin-bottom:14px;">Quản lý bán hàng</div>
+        <div style="display:flex; flex-direction:column; gap:10px; font-size:13.5px; color:#3A3A3A; line-height:1.5;">
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Tạo đơn hàng</span></div>
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Hỗ trợ quét mã vạch sản phẩm</span></div>
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Điều chỉnh giá bán theo từng sản phẩm</span></div>
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Hỗ trợ thành phần nhỏ trong từng sản phẩm</span></div>
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Ghi nợ cho từng khách hàng</span></div>
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Thanh toán qua tiền mặt / thẻ / momo / loa đọc chuyển khoản</span></div>
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Hỗ trợ xuất hóa đơn điện tử</span></div>
+        </div>
+      </div>
+      <div style="background:#FAFAFA; border:1px solid #F0E3E4; border-radius:16px; padding:22px;">
+        <div style="font-weight:800; font-size:16px; color:#1A1A1A; margin-bottom:14px;">Quản lý báo cáo</div>
+        <div style="display:flex; flex-direction:column; gap:10px; font-size:13.5px; color:#3A3A3A; line-height:1.5;">
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Báo cáo doanh thu ngày / tuần / tháng / năm</span></div>
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Báo cáo hàng hóa tồn kho</span></div>
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Báo cáo lợi nhuận doanh thu</span></div>
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Báo cáo nhập hàng</span></div>
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Báo cáo khách hàng</span></div>
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Báo cáo nhân viên</span></div>
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Báo cáo thu - chi</span></div>
+        </div>
+      </div>
+      <div style="background:#FAFAFA; border:1px solid #F0E3E4; border-radius:16px; padding:22px;">
+        <div style="font-weight:800; font-size:16px; color:#1A1A1A; margin-bottom:14px;">Quản lý kho sản phẩm</div>
+        <div style="display:flex; flex-direction:column; gap:10px; font-size:13.5px; color:#3A3A3A; line-height:1.5;">
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Tồn kho sản phẩm / chi nhánh</span></div>
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Xuất / Nhập / Kiểm / Chuyển sản phẩm</span></div>
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Sản xuất nguyên liệu tiêu hao</span></div>
+        </div>
+      </div>
+      <div style="background:#FAFAFA; border:1px solid #F0E3E4; border-radius:16px; padding:22px;">
+        <div style="font-weight:800; font-size:16px; color:#1A1A1A; margin-bottom:14px;">Quản lý khách hàng</div>
+        <div style="display:flex; flex-direction:column; gap:10px; font-size:13.5px; color:#3A3A3A; line-height:1.5;">
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Chính sách giá và chương trình khuyến mãi</span></div>
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Tự động tích điểm, voucher, mua hàng tặng hàng</span></div>
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Check nợ, trích nợ</span></div>
+        </div>
+      </div>
+      <div style="background:#FAFAFA; border:1px solid #F0E3E4; border-radius:16px; padding:22px;">
+        <div style="font-weight:800; font-size:16px; color:#1A1A1A; margin-bottom:14px;">Quản lý nhân viên</div>
+        <div style="display:flex; flex-direction:column; gap:10px; font-size:13.5px; color:#3A3A3A; line-height:1.5;">
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Quản lý nhân viên / nhân viên chi nhánh</span></div>
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Quản lý ca nhân viên</span></div>
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Quản lý doanh thu ngày / tháng</span></div>
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Xét quyền nhân viên</span></div>
+        </div>
+      </div>
+      <div style="background:#FAFAFA; border:1px solid #F0E3E4; border-radius:16px; padding:22px;">
+        <div style="font-weight:800; font-size:16px; color:#1A1A1A; margin-bottom:14px;">Thiết lập</div>
+        <div style="display:flex; flex-direction:column; gap:10px; font-size:13.5px; color:#3A3A3A; line-height:1.5;">
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Thiết lập in bill từ điện thoại, máy tính bảng, laptop, máy POS</span></div>
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Thiết lập mã PIN</span></div>
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Sử dụng không giới hạn thiết bị: điện thoại, máy tính bảng, laptop, máy POS</span></div>
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Tạo được nhiều tài khoản cho nhân viên</span></div>
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Nâng cấp tính năng miễn phí</span></div>
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Tạo mã QR tại bàn</span></div>
+        </div>
+      </div>
+    </div>
+    <div style="max-width:1200px; margin:48px auto 0; text-align:center;">
+      <a href="#" onClick="{{ openModalClick }}" style-hover="transform:translateY(-4px); box-shadow:0 10px 22px rgba(200,16,46,0.35);" style="display:inline-block; background:#C8102E; color:#fff; font-weight:700; font-size:15px; padding:15px 30px; border-radius:10px; transition:all .15s ease;">Đăng ký dùng thử 10 ngày</a>
+    </div>
+  </section>
+  </sc-if>
+
+  <!-- ============ NGÀNH HÀNG CHI TIẾT: ĂN UỐNG, GIẢI TRÍ ============ -->
+  <sc-if value="{{ isIndustryFnb }}" hint-placeholder-val="{{ false }}">
+  <section data-screen-label="Ngành hàng — Ăn uống, giải trí" style="padding:32px 48px 90px; background:#fff;">
+    <div style="text-align:center; max-width:760px; margin:0 auto 40px;">
+      <div style="color:#C8102E; font-weight:700; font-size:13.5px; letter-spacing:1.5px; margin-bottom:12px;">ĂN UỐNG, GIẢI TRÍ</div>
+      <h2 style="font-size:36px; font-weight:900; margin:0 0 14px; color:#1A1A1A;">Bảng tính năng cho mô hình F&amp;B</h2>
+      <p style="font-size:16px; color:#5A5A5A; margin:0; line-height:1.6;">Toàn bộ tính năng áp dụng riêng cho nhà hàng, quán ăn &amp; cafe.</p>
+    </div>
+    <div style="width:100%; max-width:1000px; aspect-ratio:21/8; border-radius:20px; overflow:hidden; box-shadow:0 20px 50px -24px rgba(0,0,0,0.14); margin:0 auto 48px;">
+      <img src="assets/nganh-fnb-photo.png" alt="Nhà hàng &amp; Cafe" style="width:100%; height:100%; object-fit:cover;">
+    </div>
+    <div data-rg="1" style="display:grid; grid-template-columns:repeat(3,1fr); gap:20px; max-width:1160px; margin:0 auto;">
+      <div style="background:#FAFAFA; border:1px solid #F0E3E4; border-radius:16px; padding:22px;">
+        <div style="font-weight:800; font-size:16px; color:#1A1A1A; margin-bottom:14px;">Quản lý bán hàng</div>
+        <div style="display:flex; flex-direction:column; gap:10px; font-size:13.5px; color:#3A3A3A; line-height:1.5;">
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Tạo đơn hàng</span></div>
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Hỗ trợ báo bếp</span></div>
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Hỗ trợ in bill hóa đơn / bill bếp</span></div>
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Order qua Web, thanh toán, đặt món</span></div>
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Điều chỉnh giá bán theo từng khách hàng</span></div>
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Ghi nợ cho từng khách hàng</span></div>
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Ưu đãi voucher, quà tặng, tích điểm khách hàng</span></div>
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Thanh toán qua tiền mặt / thẻ / momo / loa đọc chuyển khoản</span></div>
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Hỗ trợ xuất hóa đơn điện tử</span></div>
+        </div>
+      </div>
+      <div style="background:#FAFAFA; border:1px solid #F0E3E4; border-radius:16px; padding:22px;">
+        <div style="font-weight:800; font-size:16px; color:#1A1A1A; margin-bottom:14px;">Quản lý báo cáo</div>
+        <div style="display:flex; flex-direction:column; gap:10px; font-size:13.5px; color:#3A3A3A; line-height:1.5;">
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Báo cáo doanh thu ngày / tuần / tháng / năm</span></div>
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Báo cáo hàng hóa tồn kho</span></div>
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Báo cáo lợi nhuận doanh thu</span></div>
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Báo cáo nhập hàng</span></div>
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Báo cáo khách hàng</span></div>
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Báo cáo nhân viên</span></div>
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Báo cáo thu - chi</span></div>
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Báo cáo nguyên vật liệu</span></div>
+        </div>
+      </div>
+      <div style="background:#FAFAFA; border:1px solid #F0E3E4; border-radius:16px; padding:22px;">
+        <div style="font-weight:800; font-size:16px; color:#1A1A1A; margin-bottom:14px;">Quản lý kho sản phẩm</div>
+        <div style="display:flex; flex-direction:column; gap:10px; font-size:13.5px; color:#3A3A3A; line-height:1.5;">
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Tồn kho sản phẩm / chi nhánh</span></div>
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Xuất / Nhập / Kiểm / Chuyển sản phẩm</span></div>
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Sản xuất nguyên liệu tiêu hao</span></div>
+        </div>
+      </div>
+      <div style="background:#FAFAFA; border:1px solid #F0E3E4; border-radius:16px; padding:22px;">
+        <div style="font-weight:800; font-size:16px; color:#1A1A1A; margin-bottom:14px;">Quản lý khách hàng</div>
+        <div style="display:flex; flex-direction:column; gap:10px; font-size:13.5px; color:#3A3A3A; line-height:1.5;">
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Chính sách giá và chương trình khuyến mãi</span></div>
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Tự động tích điểm, voucher, mua hàng tặng hàng</span></div>
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Check nợ, trích nợ</span></div>
+        </div>
+      </div>
+      <div style="background:#FAFAFA; border:1px solid #F0E3E4; border-radius:16px; padding:22px;">
+        <div style="font-weight:800; font-size:16px; color:#1A1A1A; margin-bottom:14px;">Quản lý nhân viên</div>
+        <div style="display:flex; flex-direction:column; gap:10px; font-size:13.5px; color:#3A3A3A; line-height:1.5;">
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Quản lý nhân viên / nhân viên chi nhánh</span></div>
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Quản lý ca nhân viên</span></div>
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Quản lý doanh thu ngày / tháng</span></div>
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Xét quyền nhân viên</span></div>
+        </div>
+      </div>
+      <div style="background:#FAFAFA; border:1px solid #F0E3E4; border-radius:16px; padding:22px;">
+        <div style="font-weight:800; font-size:16px; color:#1A1A1A; margin-bottom:14px;">Thiết lập</div>
+        <div style="display:flex; flex-direction:column; gap:10px; font-size:13.5px; color:#3A3A3A; line-height:1.5;">
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Thiết lập in bill từ điện thoại, máy tính bảng, laptop, máy POS</span></div>
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Thiết lập mã PIN</span></div>
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Sử dụng không giới hạn thiết bị: điện thoại, máy tính bảng, laptop, máy POS</span></div>
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Tạo được nhiều tài khoản cho nhân viên</span></div>
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Nâng cấp tính năng miễn phí</span></div>
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Tạo mã QR tại bàn</span></div>
+        </div>
+      </div>
+    </div>
+    <div style="max-width:1200px; margin:48px auto 0; text-align:center;">
+      <a href="#" onClick="{{ openModalClick }}" style-hover="transform:translateY(-4px); box-shadow:0 10px 22px rgba(200,16,46,0.35);" style="display:inline-block; background:#C8102E; color:#fff; font-weight:700; font-size:15px; padding:15px 30px; border-radius:10px; transition:all .15s ease;">Đăng ký dùng thử 10 ngày</a>
+    </div>
+  </section>
+  </sc-if>
+
+  <!-- ============ NGÀNH HÀNG CHI TIẾT: KHÁCH SẠN, NHÀ NGHỈ ============ -->
+  <sc-if value="{{ isIndustryKhachSan }}" hint-placeholder-val="{{ false }}">
+  <section data-screen-label="Ngành hàng — Khách sạn, nhà nghỉ" style="padding:32px 48px 90px; background:#fff;">
+    <div style="text-align:center; max-width:760px; margin:0 auto 40px;">
+      <div style="color:#C8102E; font-weight:700; font-size:13.5px; letter-spacing:1.5px; margin-bottom:12px;">KHÁCH SẠN, NHÀ NGHỈ</div>
+      <h2 style="font-size:36px; font-weight:900; margin:0 0 14px; color:#1A1A1A;">Bảng tính năng cho mô hình khách sạn &amp; nhà nghỉ</h2>
+      <p style="font-size:16px; color:#5A5A5A; margin:0; line-height:1.6;">Toàn bộ tính năng áp dụng riêng cho khách sạn, nhà nghỉ &amp; homestay.</p>
+    </div>
+    <div style="width:100%; max-width:1000px; aspect-ratio:21/8; border-radius:20px; overflow:hidden; box-shadow:0 20px 50px -24px rgba(0,0,0,0.14); margin:0 auto 48px;">
+      <img src="assets/nganh-khach-san-photo.png" alt="Lễ tân khách sạn" style="width:100%; height:100%; object-fit:cover;">
+    </div>
+    <div data-rg="1" style="display:grid; grid-template-columns:repeat(3,1fr); gap:20px; max-width:1160px; margin:0 auto;">
+      <div style="background:#FAFAFA; border:1px solid #F0E3E4; border-radius:16px; padding:22px;">
+        <div style="font-weight:800; font-size:16px; color:#1A1A1A; margin-bottom:14px;">Quản lý đặt phòng</div>
+        <div style="display:flex; flex-direction:column; gap:10px; font-size:13.5px; color:#3A3A3A; line-height:1.5;">
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Sơ đồ phòng trực quan theo thời gian thực</span></div>
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Nhận / trả phòng nhanh chóng, đặt phòng theo giờ hoặc theo đêm</span></div>
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Tích hợp kênh OTA: Booking, Agoda, Traveloka</span></div>
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Xếp phòng tự động, cảnh báo trùng lịch</span></div>
+        </div>
+      </div>
+      <div style="background:#FAFAFA; border:1px solid #F0E3E4; border-radius:16px; padding:22px;">
+        <div style="font-weight:800; font-size:16px; color:#1A1A1A; margin-bottom:14px;">Quản lý dịch vụ &amp; hóa đơn</div>
+        <div style="display:flex; flex-direction:column; gap:10px; font-size:13.5px; color:#3A3A3A; line-height:1.5;">
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Quản lý dịch vụ đi kèm: minibar, giặt ủi, ăn uống tại phòng</span></div>
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Gộp hóa đơn dịch vụ vào hóa đơn lưu trú</span></div>
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Xuất hóa đơn điện tử tự động khi trả phòng</span></div>
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Thanh toán qua tiền mặt / thẻ / momo / chuyển khoản</span></div>
+        </div>
+      </div>
+      <div style="background:#FAFAFA; border:1px solid #F0E3E4; border-radius:16px; padding:22px;">
+        <div style="font-weight:800; font-size:16px; color:#1A1A1A; margin-bottom:14px;">Quản lý báo cáo</div>
+        <div style="display:flex; flex-direction:column; gap:10px; font-size:13.5px; color:#3A3A3A; line-height:1.5;">
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Báo cáo công suất phòng, doanh thu theo ngày / tháng / năm</span></div>
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Báo cáo doanh thu theo từng loại phòng</span></div>
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Báo cáo nhân viên, ca trực lễ tân</span></div>
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Báo cáo thu - chi</span></div>
+        </div>
+      </div>
+      <div style="background:#FAFAFA; border:1px solid #F0E3E4; border-radius:16px; padding:22px;">
+        <div style="font-weight:800; font-size:16px; color:#1A1A1A; margin-bottom:14px;">Quản lý khách hàng</div>
+        <div style="display:flex; flex-direction:column; gap:10px; font-size:13.5px; color:#3A3A3A; line-height:1.5;">
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Lưu hồ sơ, lịch sử lưu trú của từng khách hàng</span></div>
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Chính sách giá theo mùa, chương trình khuyến mãi</span></div>
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Tích điểm, ưu đãi cho khách hàng thân thiết</span></div>
+        </div>
+      </div>
+      <div style="background:#FAFAFA; border:1px solid #F0E3E4; border-radius:16px; padding:22px;">
+        <div style="font-weight:800; font-size:16px; color:#1A1A1A; margin-bottom:14px;">Quản lý nhân viên</div>
+        <div style="display:flex; flex-direction:column; gap:10px; font-size:13.5px; color:#3A3A3A; line-height:1.5;">
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Quản lý nhân viên lễ tân, buồng phòng theo ca</span></div>
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Phân quyền thao tác theo từng vai trò</span></div>
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Theo dõi doanh thu theo từng nhân viên</span></div>
+        </div>
+      </div>
+      <div style="background:#FAFAFA; border:1px solid #F0E3E4; border-radius:16px; padding:22px;">
+        <div style="font-weight:800; font-size:16px; color:#1A1A1A; margin-bottom:14px;">Thiết lập</div>
+        <div style="display:flex; flex-direction:column; gap:10px; font-size:13.5px; color:#3A3A3A; line-height:1.5;">
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Sử dụng không giới hạn thiết bị: điện thoại, máy tính bảng, laptop, máy POS</span></div>
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Thiết lập mã PIN, tạo nhiều tài khoản nhân viên</span></div>
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Nâng cấp tính năng miễn phí</span></div>
+        </div>
+      </div>
+    </div>
+    <div style="max-width:1200px; margin:48px auto 0; text-align:center;">
+      <a href="#" onClick="{{ openModalClick }}" style-hover="transform:translateY(-4px); box-shadow:0 10px 22px rgba(200,16,46,0.35);" style="display:inline-block; background:#C8102E; color:#fff; font-weight:700; font-size:15px; padding:15px 30px; border-radius:10px; transition:all .15s ease;">Đăng ký dùng thử 10 ngày</a>
+    </div>
+  </section>
+  </sc-if>
+
+  <!-- ============ NGÀNH HÀNG CHI TIẾT: SỨC KHỎE, LÀM ĐẸP ============ -->
+  <sc-if value="{{ isIndustryLamDep }}" hint-placeholder-val="{{ false }}">
+  <section data-screen-label="Ngành hàng — Sức khỏe, làm đẹp" style="padding:32px 48px 90px; background:#fff;">
+    <div style="text-align:center; max-width:760px; margin:0 auto 40px;">
+      <div style="color:#C8102E; font-weight:700; font-size:13.5px; letter-spacing:1.5px; margin-bottom:12px;">SỨC KHỎE, LÀM ĐẸP</div>
+      <h2 style="font-size:36px; font-weight:900; margin:0 0 14px; color:#1A1A1A;">Bảng tính năng cho spa &amp; cơ sở làm đẹp</h2>
+      <p style="font-size:16px; color:#5A5A5A; margin:0; line-height:1.6;">Toàn bộ tính năng áp dụng riêng cho spa, thẩm mỹ viện &amp; chăm sóc sức khỏe.</p>
+    </div>
+    <div style="width:100%; max-width:1000px; aspect-ratio:21/8; border-radius:20px; overflow:hidden; box-shadow:0 20px 50px -24px rgba(0,0,0,0.14); margin:0 auto 48px;">
+      <img src="assets/nganh-lam-dep-photo.png" alt="Nhân viên spa/làm đẹp" style="width:100%; height:100%; object-fit:cover;">
+    </div>
+    <div data-rg="1" style="display:grid; grid-template-columns:repeat(3,1fr); gap:20px; max-width:1160px; margin:0 auto;">
+      <div style="background:#FAFAFA; border:1px solid #F0E3E4; border-radius:16px; padding:22px;">
+        <div style="font-weight:800; font-size:16px; color:#1A1A1A; margin-bottom:14px;">Quản lý lịch hẹn</div>
+        <div style="display:flex; flex-direction:column; gap:10px; font-size:13.5px; color:#3A3A3A; line-height:1.5;">
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Đặt lịch hẹn, nhắc lịch tự động qua SMS / Zalo</span></div>
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Xếp lịch theo kỹ thuật viên, tránh trùng ca</span></div>
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Quản lý danh sách chờ, khách vãng lai</span></div>
+        </div>
+      </div>
+      <div style="background:#FAFAFA; border:1px solid #F0E3E4; border-radius:16px; padding:22px;">
+        <div style="font-weight:800; font-size:16px; color:#1A1A1A; margin-bottom:14px;">Quản lý liệu trình &amp; hồ sơ</div>
+        <div style="display:flex; flex-direction:column; gap:10px; font-size:13.5px; color:#3A3A3A; line-height:1.5;">
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Lưu hồ sơ, lịch sử điều trị của từng khách hàng</span></div>
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Quản lý gói liệu trình trả trước, số buổi đã sử dụng</span></div>
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Ghi chú tình trạng da / sức khỏe riêng từng khách</span></div>
+        </div>
+      </div>
+      <div style="background:#FAFAFA; border:1px solid #F0E3E4; border-radius:16px; padding:22px;">
+        <div style="font-weight:800; font-size:16px; color:#1A1A1A; margin-bottom:14px;">Quản lý báo cáo</div>
+        <div style="display:flex; flex-direction:column; gap:10px; font-size:13.5px; color:#3A3A3A; line-height:1.5;">
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Báo cáo doanh thu ngày / tuần / tháng / năm</span></div>
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Báo cáo hoa hồng theo từng nhân viên</span></div>
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Báo cáo khách hàng, tỉ lệ quay lại</span></div>
+        </div>
+      </div>
+      <div style="background:#FAFAFA; border:1px solid #F0E3E4; border-radius:16px; padding:22px;">
+        <div style="font-weight:800; font-size:16px; color:#1A1A1A; margin-bottom:14px;">Quản lý khách hàng</div>
+        <div style="display:flex; flex-direction:column; gap:10px; font-size:13.5px; color:#3A3A3A; line-height:1.5;">
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Quản lý thẻ thành viên, ưu đãi theo hạng</span></div>
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Tự động tích điểm, tặng quà sinh nhật</span></div>
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Check nợ, trích nợ liệu trình</span></div>
+        </div>
+      </div>
+      <div style="background:#FAFAFA; border:1px solid #F0E3E4; border-radius:16px; padding:22px;">
+        <div style="font-weight:800; font-size:16px; color:#1A1A1A; margin-bottom:14px;">Quản lý nhân viên</div>
+        <div style="display:flex; flex-direction:column; gap:10px; font-size:13.5px; color:#3A3A3A; line-height:1.5;">
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Tính hoa hồng theo từng dịch vụ thực hiện</span></div>
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Quản lý ca làm, xét quyền nhân viên</span></div>
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Theo dõi hiệu suất từng kỹ thuật viên</span></div>
+        </div>
+      </div>
+      <div style="background:#FAFAFA; border:1px solid #F0E3E4; border-radius:16px; padding:22px;">
+        <div style="font-weight:800; font-size:16px; color:#1A1A1A; margin-bottom:14px;">Thiết lập</div>
+        <div style="display:flex; flex-direction:column; gap:10px; font-size:13.5px; color:#3A3A3A; line-height:1.5;">
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Sử dụng không giới hạn thiết bị: điện thoại, máy tính bảng, laptop, máy POS</span></div>
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Thiết lập mã PIN, tạo nhiều tài khoản nhân viên</span></div>
+          <div style="display:flex; gap:8px;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Nâng cấp tính năng miễn phí</span></div>
+        </div>
+      </div>
+    </div>
+    <div style="max-width:1200px; margin:48px auto 0; text-align:center;">
+      <a href="#" onClick="{{ openModalClick }}" style-hover="transform:translateY(-4px); box-shadow:0 10px 22px rgba(200,16,46,0.35);" style="display:inline-block; background:#C8102E; color:#fff; font-weight:700; font-size:15px; padding:15px 30px; border-radius:10px; transition:all .15s ease;">Đăng ký dùng thử 10 ngày</a>
+    </div>
+  </section>
+  </sc-if>
+  </sc-if>
+
+  <!-- ============ BẢNG GIÁ PHẦN MỀM (TAB) ============ -->
+  <sc-if value="{{ isBangGia }}" hint-placeholder-val="{{ false }}">
+  <section data-screen-label="Bảng giá — Tab" style="padding:32px 48px 0; background:#FFF8F8;">
+    <a href="#" onClick="{{ goHome }}" style="display:inline-flex; align-items:center; gap:8px; color:#C8102E; font-weight:700; font-size:14px;">← Quay lại trang chủ</a>
+  </section>
+  <section data-screen-label="Bảng giá phần mềm" id="bang-gia" style="padding:32px 48px 90px; background:#FFF8F8;">
+    <div style="text-align:center; max-width:700px; margin:0 auto 20px;">
+      
+      <h2 style="font-size:36px; font-weight:900; margin:0 0 14px; color:#1A1A1A;">Phần mềm quản lý bán hàng toàn diện</h2>
+      <p style="font-size:16px; color:#5A5A5A; margin:0; line-height:1.6;">Chọn gói phù hợp với quy mô cửa hàng của bạn — càng đăng ký lâu, ưu đãi càng lớn.</p>
+    </div>
+
+    <div data-rg="1" style="display:grid; grid-template-columns:repeat(4,1fr); gap:24px; max-width:1280px; margin:56px auto 0; align-items:start;">
+
+      <!-- Gói 1 năm -->
+      <div style="background:#fff; border-radius:20px; overflow:hidden; border:2px solid #1A1A1A; box-shadow:0 4px 18px rgba(0,0,0,0.04); display:flex; flex-direction:column; height:100%; transition:transform .2s ease, box-shadow .2s ease;" style-hover="transform:translateY(-6px); box-shadow:0 20px 40px -18px rgba(0,0,0,0.14);">
+        <div style="padding:26px 20px 22px; text-align:center; position:relative; border-bottom:1px solid #F5E6E8;">
+          <div style="position:absolute; top:0; left:0; right:0; height:4px; background:linear-gradient(90deg,#D91E36,#A50D24); border-radius:20px 20px 0 0;"></div>
+          <div style="font-size:22px; font-weight:900; color:#1A1A1A; letter-spacing:0.2px; margin-bottom:12px;">Gói 1 năm</div>
+          <div style="display:inline-flex; align-items:baseline; gap:6px; background:#FDE8EA; padding:6px 16px; border-radius:100px; white-space:nowrap;">
+            <span style="font-size:11px; font-weight:700; color:#C8102E; letter-spacing:0.5px; white-space:nowrap;">TẶNG</span><span style="font-size:13.5px; font-weight:800; color:#C8102E; white-space:nowrap;">3 THÁNG</span>
+          </div>
+        </div>
+        <div style="padding:28px 24px 26px; display:flex; flex-direction:column; flex:1;">
+          <div style="text-align:center; margin-bottom:20px;">
+            <div style="font-size:15px; color:#BDBDBD; text-decoration:line-through; font-weight:600;">2.040.000đ</div>
+            <div style="font-size:30px; color:#C8102E; font-weight:900; margin-top:4px; letter-spacing:-0.3px;">1.440.000đ</div>
+            <div style="font-size:12px; color:#9A9A9A; font-weight:600; margin-top:3px;">Thanh toán một lần</div>
+          </div>
+          <div style="height:2px; background:#1A1A1A; margin:0 0 20px; border-radius:2px;"></div>
+          <div style="display:flex; flex-direction:column; gap:12px; font-size:14px; color:#3A3A3A; flex:1; margin-bottom:24px;">
+            <div style="display:flex; gap:9px; align-items:center;"><span style="color:#C8102E; font-weight:800;">✔</span>Đầy đủ tính năng</div>
+            <div style="display:flex; gap:9px; align-items:center;"><span style="color:#C8102E; font-weight:800;">✔</span>Hỗ trợ kỹ thuật</div>
+            <div style="display:flex; gap:9px; align-items:center;"><span style="color:#C8102E; font-weight:800;">✔</span>Cập nhật miễn phí</div>
+            <div style="display:flex; gap:9px; align-items:center;"><span style="color:#C8102E; font-weight:800;">✔</span>Sử dụng mọi thiết bị</div>
+          </div>
+          <a href="#" onClick="{{ openModalClick }}" style-hover="transform:translateY(-4px); box-shadow:0 10px 22px rgba(200,16,46,0.35);" style="text-align:center; background:#C8102E; color:#fff; font-weight:700; font-size:14.5px; padding:14px; border-radius:10px; transition:all .15s ease; letter-spacing:0.3px;">ĐĂNG KÝ NGAY</a>
+        </div>
+      </div>
+
+      <!-- Gói 2 năm -->
+      <div style="background:#fff; border-radius:20px; overflow:hidden; border:2px solid #1A1A1A; box-shadow:0 4px 18px rgba(0,0,0,0.04); display:flex; flex-direction:column; height:100%; transition:transform .2s ease, box-shadow .2s ease;" style-hover="transform:translateY(-6px); box-shadow:0 20px 40px -18px rgba(0,0,0,0.14);">
+        <div style="padding:26px 20px 22px; text-align:center; position:relative; border-bottom:1px solid #F5E6E8;">
+          <div style="position:absolute; top:0; left:0; right:0; height:4px; background:linear-gradient(90deg,#D91E36,#A50D24); border-radius:20px 20px 0 0;"></div>
+          <div style="font-size:22px; font-weight:900; color:#1A1A1A; letter-spacing:0.2px; margin-bottom:12px;">Gói 2 năm</div>
+          <div style="display:inline-flex; align-items:baseline; gap:6px; background:#FDE8EA; padding:6px 16px; border-radius:100px; white-space:nowrap;">
+            <span style="font-size:11px; font-weight:700; color:#C8102E; letter-spacing:0.5px; white-space:nowrap;">TẶNG</span><span style="font-size:13.5px; font-weight:800; color:#C8102E; white-space:nowrap;">6 THÁNG</span>
+          </div>
+        </div>
+        <div style="padding:28px 24px 26px; display:flex; flex-direction:column; flex:1;">
+          <div style="text-align:center; margin-bottom:20px;">
+            <div style="font-size:15px; color:#BDBDBD; text-decoration:line-through; font-weight:600;">3.480.000đ</div>
+            <div style="font-size:30px; color:#C8102E; font-weight:900; margin-top:4px; letter-spacing:-0.3px;">2.680.000đ</div>
+            <div style="font-size:12px; color:#9A9A9A; font-weight:600; margin-top:3px;">Thanh toán một lần</div>
+          </div>
+          <div style="height:2px; background:#1A1A1A; margin:0 0 20px; border-radius:2px;"></div>
+          <div style="display:flex; flex-direction:column; gap:12px; font-size:14px; color:#3A3A3A; flex:1; margin-bottom:24px;">
+            <div style="display:flex; gap:9px; align-items:center;"><span style="color:#C8102E; font-weight:800;">✔</span>Đầy đủ tính năng</div>
+            <div style="display:flex; gap:9px; align-items:center;"><span style="color:#C8102E; font-weight:800;">✔</span>Hỗ trợ kỹ thuật</div>
+            <div style="display:flex; gap:9px; align-items:center;"><span style="color:#C8102E; font-weight:800;">✔</span>Cập nhật miễn phí</div>
+            <div style="display:flex; gap:9px; align-items:center;"><span style="color:#C8102E; font-weight:800;">✔</span>Sử dụng mọi thiết bị</div>
+          </div>
+          <a href="#" onClick="{{ openModalClick }}" style-hover="transform:translateY(-4px); box-shadow:0 10px 22px rgba(200,16,46,0.35);" style="text-align:center; background:#C8102E; color:#fff; font-weight:700; font-size:14.5px; padding:14px; border-radius:10px; transition:all .15s ease; letter-spacing:0.3px;">ĐĂNG KÝ NGAY</a>
+        </div>
+      </div>
+
+      <!-- Gói 3 năm - popular -->
+      <div style="background:#fff; border-radius:20px; overflow:visible; border:2px solid #C8102E; box-shadow:0 14px 32px rgba(200,16,46,0.18); display:flex; flex-direction:column; position:relative; transform:scale(1.045); height:100%;">
+        <div style="position:absolute; top:-14px; left:50%; transform:translateX(-50%); background:#F4B400; color:#5A3E00; font-weight:800; font-size:11.5px; padding:7px 18px; border-radius:100px; text-align:center; white-space:nowrap; box-shadow:0 4px 10px rgba(0,0,0,0.15); letter-spacing:0.3px;">★ PHỔ BIẾN NHẤT ★</div>
+        <div style="background:linear-gradient(160deg,#E8323E,#C8102E); border-radius:18px 18px 0 0; padding:30px 20px 24px; text-align:center; color:#fff;">
+          <div style="font-size:23px; font-weight:900; letter-spacing:0.2px; margin-bottom:12px;">Gói 3 năm</div>
+          <div style="display:inline-flex; align-items:baseline; gap:6px; background:rgba(255,255,255,0.2); padding:6px 16px; border-radius:100px; white-space:nowrap;">
+            <span style="font-size:11px; font-weight:700; opacity:0.9; letter-spacing:0.5px; white-space:nowrap;">TẶNG</span><span style="font-size:13.5px; font-weight:800; white-space:nowrap;">12 THÁNG</span>
+          </div>
+        </div>
+        <div style="padding:28px 24px 26px; display:flex; flex-direction:column; flex:1;">
+          <div style="text-align:center; margin-bottom:20px;">
+            <div style="font-size:15px; color:#BDBDBD; text-decoration:line-through; font-weight:600;">5.320.000đ</div>
+            <div style="font-size:32px; color:#C8102E; font-weight:900; margin-top:4px; letter-spacing:-0.3px;">4.320.000đ</div>
+            <div style="font-size:12px; color:#9A9A9A; font-weight:600; margin-top:3px;">Thanh toán một lần</div>
+          </div>
+          <div style="height:2px; background:#1A1A1A; margin:0 0 20px; border-radius:2px;"></div>
+          <div style="display:flex; flex-direction:column; gap:12px; font-size:14px; color:#3A3A3A; flex:1; margin-bottom:24px;">
+            <div style="display:flex; gap:9px; align-items:center;"><span style="color:#C8102E; font-weight:800;">✔</span>Đầy đủ tính năng</div>
+            <div style="display:flex; gap:9px; align-items:center;"><span style="color:#C8102E; font-weight:800;">✔</span>Hỗ trợ kỹ thuật</div>
+            <div style="display:flex; gap:9px; align-items:center;"><span style="color:#C8102E; font-weight:800;">✔</span>Cập nhật miễn phí</div>
+            <div style="display:flex; gap:9px; align-items:center;"><span style="color:#C8102E; font-weight:800;">✔</span>Sử dụng mọi thiết bị</div>
+          </div>
+          <a href="#" onClick="{{ openModalClick }}" style-hover="transform:translateY(-4px); box-shadow:0 12px 26px rgba(200,16,46,0.4);" style="text-align:center; background:#C8102E; color:#fff; font-weight:700; font-size:14.5px; padding:14px; border-radius:10px; transition:all .15s ease; box-shadow:0 8px 18px rgba(200,16,46,0.3); letter-spacing:0.3px;">ĐĂNG KÝ NGAY</a>
+        </div>
+      </div>
+
+      <!-- Gói 5 năm -->
+      <div style="background:#fff; border-radius:20px; overflow:hidden; border:2px solid #1A1A1A; box-shadow:0 4px 18px rgba(0,0,0,0.04); display:flex; flex-direction:column; height:100%; transition:transform .2s ease, box-shadow .2s ease;" style-hover="transform:translateY(-6px); box-shadow:0 20px 40px -18px rgba(0,0,0,0.14);">
+        <div style="padding:26px 20px 22px; text-align:center; position:relative; border-bottom:1px solid #F5E6E8;">
+          <div style="position:absolute; top:0; left:0; right:0; height:4px; background:linear-gradient(90deg,#D91E36,#A50D24); border-radius:20px 20px 0 0;"></div>
+          <div style="font-size:22px; font-weight:900; color:#1A1A1A; letter-spacing:0.2px; margin-bottom:12px;">Gói 5 năm</div>
+          <div style="display:inline-flex; align-items:baseline; gap:6px; background:#FDE8EA; padding:6px 16px; border-radius:100px; white-space:nowrap;">
+            <span style="font-size:11px; font-weight:700; color:#C8102E; letter-spacing:0.5px; white-space:nowrap;">TẶNG</span><span style="font-size:13.5px; font-weight:800; color:#C8102E; white-space:nowrap;">24 THÁNG</span>
+          </div>
+        </div>
+        <div style="padding:28px 24px 26px; display:flex; flex-direction:column; flex:1;">
+          <div style="text-align:center; margin-bottom:20px;">
+            <div style="font-size:15px; color:#BDBDBD; text-decoration:line-through; font-weight:600;">8.190.000đ</div>
+            <div style="font-size:30px; color:#C8102E; font-weight:900; margin-top:4px; letter-spacing:-0.3px;">6.190.000đ</div>
+            <div style="font-size:12px; color:#9A9A9A; font-weight:600; margin-top:3px;">Thanh toán một lần</div>
+          </div>
+          <div style="height:2px; background:#1A1A1A; margin:0 0 20px; border-radius:2px;"></div>
+          <div style="display:flex; flex-direction:column; gap:12px; font-size:14px; color:#3A3A3A; flex:1; margin-bottom:24px;">
+            <div style="display:flex; gap:9px; align-items:center;"><span style="color:#C8102E; font-weight:800;">✔</span>Đầy đủ tính năng</div>
+            <div style="display:flex; gap:9px; align-items:center;"><span style="color:#C8102E; font-weight:800;">✔</span>Hỗ trợ kỹ thuật</div>
+            <div style="display:flex; gap:9px; align-items:center;"><span style="color:#C8102E; font-weight:800;">✔</span>Cập nhật miễn phí</div>
+            <div style="display:flex; gap:9px; align-items:center;"><span style="color:#C8102E; font-weight:800;">✔</span>Sử dụng mọi thiết bị</div>
+          </div>
+          <a href="#" onClick="{{ openModalClick }}" style-hover="transform:translateY(-4px); box-shadow:0 10px 22px rgba(200,16,46,0.35);" style="text-align:center; background:#C8102E; color:#fff; font-weight:700; font-size:14.5px; padding:14px; border-radius:10px; transition:all .15s ease; letter-spacing:0.3px;">ĐĂNG KÝ NGAY</a>
+        </div>
+      </div>
+
+    </div>
+
+    <div data-rg="2" style="max-width:1100px; margin:96px auto 0; display:grid; grid-template-columns:repeat(4,1fr); gap:18px; background:#fff; border-radius:16px; padding:26px 30px; border:1px solid #F0E3E4;">
+      <div style="display:flex; align-items:center; gap:12px;"><span style="font-size:22px;">🛡️</span><div><div style="font-weight:700; font-size:14px;">Bảo mật tuyệt đối</div><div style="font-size:12.5px; color:#8A8A8A;">Dữ liệu được mã hóa an toàn 100%</div></div></div>
+      <div style="display:flex; align-items:center; gap:12px;"><span style="font-size:22px;">🎧</span><div><div style="font-weight:700; font-size:14px;">Hỗ trợ 24/7</div><div style="font-size:12.5px; color:#8A8A8A;">Đội ngũ kỹ thuật luôn sẵn sàng</div></div></div>
+      <div style="display:flex; align-items:center; gap:12px;"><span style="font-size:22px;">☁️</span><div><div style="font-weight:700; font-size:14px;">Cập nhật liên tục</div><div style="font-size:12.5px; color:#8A8A8A;">Nâng cấp tính năng miễn phí</div></div></div>
+      <div style="display:flex; align-items:center; gap:12px;"><span style="font-size:22px;">💻</span><div><div style="font-weight:700; font-size:14px;">Sử dụng mọi nơi</div><div style="font-size:12.5px; color:#8A8A8A;">Tương thích trên mọi thiết bị</div></div></div>
+    </div>
+
+    <!-- ============ HÓA ĐƠN ĐIỆN TỬ + CHỮ KÝ SỐ HSM VIETTEL ============ -->
+    <div style="max-width:1280px; margin:90px auto 0;">
+      <div style="text-align:center; max-width:700px; margin:0 auto 40px;">
+        <div style="color: #C8102E; font-weight: 700; font-size: 18px; letter-spacing: 1.5px; margin-bottom: 12px">HÓA ĐƠN ĐIỆN TỬ &amp; CHỮ KÝ SỐ</div>
+        <h2 style="font-size:32px; font-weight:900; margin:0 0 14px; color:#1A1A1A;">Gói hóa đơn điện tử + chữ ký số HSM Viettel</h2>
+        <div style="display:inline-flex; align-items:center; gap:14px; background:#fff; border:1px solid #F0E3E4; border-radius:100px; padding:8px 22px 8px 16px;">
+          <img src="assets/logo-viettel.png" alt="Viettel" style="height:66px; width:auto; object-fit:contain;">
+          <span style="font-size: 16px; font-weight: 700; color: #5A5A5A">Đối tác cung cấp: Viettel</span>
+        </div>
+      </div>
+      <div data-rg="1" style="display:grid; grid-template-columns:repeat(2,1fr); gap:24px; max-width:820px; margin:0 auto;">
+        <div style="background:#fff; border-radius:20px; overflow:hidden; border:1px solid #F0E3E4; box-shadow:0 4px 18px rgba(0,0,0,0.04); transition:transform .2s ease, box-shadow .2s ease;" style-hover="transform:translateY(-6px); box-shadow:0 20px 40px -18px rgba(0,0,0,0.14);">
+          <div style="padding:26px 24px 22px; text-align:center; position:relative; border-bottom:1px solid #F5E6E8;">
+            <div style="position:absolute; top:0; left:0; right:0; height:4px; background:linear-gradient(90deg,#D91E36,#A50D24); border-radius:20px 20px 0 0;"></div>
+            <div style="font-size:20px; font-weight:900; color:#1A1A1A;">6 tháng HSM</div><div style="font-size: 18px; color: #5A5A5A; margin-top: 6px">&nbsp;10.000 hóa đơn điện tử</div>
+            
+          </div>
+          <div style="padding:26px 24px;">
+            <div style="text-align:center; margin-bottom:22px;">
+              <div style="font-size:32px; color:#C8102E; font-weight:900; letter-spacing:-0.3px;">559.000đ</div>
+              <div style="font-size:12px; color:#9A9A9A; font-weight:600; margin-top:4px;">Thanh toán một lần</div>
+            </div>
+            <a href="#" onClick="{{ openModalClick }}" style-hover="transform:translateY(-4px); box-shadow:0 10px 22px rgba(200,16,46,0.35);" style="display:block; text-align:center; background:#C8102E; color:#fff; font-weight:700; font-size:14.5px; padding:14px; border-radius:10px; transition:all .15s ease; letter-spacing:0.3px;">ĐĂNG KÝ NGAY</a>
+          </div>
+        </div>
+        <div style="background:#fff; border-radius:20px; overflow:hidden; border:1px solid #F0E3E4; box-shadow:0 4px 18px rgba(0,0,0,0.04); transition:transform .2s ease, box-shadow .2s ease;" style-hover="transform:translateY(-6px); box-shadow:0 20px 40px -18px rgba(0,0,0,0.14);">
+          <div style="padding:26px 24px 22px; text-align:center; position:relative; border-bottom:1px solid #F5E6E8;">
+            <div style="position:absolute; top:0; left:0; right:0; height:4px; background:linear-gradient(90deg,#D91E36,#A50D24); border-radius:20px 20px 0 0;"></div>
+            <div style="font-size:20px; font-weight:900; color:#1A1A1A;">18 tháng HSM</div>
+            <div style="font-size: 18px; color: #5A5A5A; margin-top: 6px">&nbsp;10.000 hóa đơn điện tử</div>
+          </div>
+          <div style="padding:26px 24px;">
+            <div style="text-align:center; margin-bottom:22px;">
+              <div style="font-size:32px; color:#C8102E; font-weight:900; letter-spacing:-0.3px;">1.423.000đ</div>
+              <div style="font-size:12px; color:#9A9A9A; font-weight:600; margin-top:4px;">Thanh toán một lần</div>
+            </div>
+            <a href="#" onClick="{{ openModalClick }}" style-hover="transform:translateY(-4px); box-shadow:0 10px 22px rgba(200,16,46,0.35);" style="display:block; text-align:center; background:#C8102E; color:#fff; font-weight:700; font-size:14.5px; padding:14px; border-radius:10px; transition:all .15s ease; letter-spacing:0.3px;">ĐĂNG KÝ NGAY</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ BÁO GIÁ THIẾT BỊ ============ -->
+    <div id="thiet-bi" style="max-width:1280px; margin:90px auto 0;">
+      <div style="text-align:center; max-width:700px; margin:0 auto 40px;">
+        <div style="color:#C8102E; font-weight:700; font-size:13.5px; letter-spacing:1.5px; margin-bottom:12px;">BÁO GIÁ THIẾT BỊ</div>
+        <h2 style="font-size:32px; font-weight:900; margin:0 0 14px; color:#1A1A1A;">Trang bị trọn bộ thiết bị bán hàng</h2>
+        <p style="font-size:16px; color:#5A5A5A; margin:0; line-height:1.6;">Đồng bộ hoàn hảo với phần mềm Hako POS — lắp đặt và bàn giao tận nơi.</p>
+      </div>
+
+      <div data-rg="2" style="display:grid; grid-template-columns:repeat(5,1fr); gap:20px;">
+
+        <div style="border:1px solid #F0E3E4; border-radius:16px; padding:20px; background:#fff;">
+          <div style="width:100%; aspect-ratio:1/1; border-radius:12px; background:#fff; display:flex; align-items:center; justify-content:center; margin-bottom:14px; overflow:hidden; border:1px solid #F5E2E4;">
+            <img src="assets/tb-may-in-xprinter-den2.png" alt="Máy POS cảm ứng all-in-one" style="width:100%; height:100%; object-fit:contain; padding:8px;">
+          </div>
+          <div style="font-weight:800; font-size:14.5px; margin-bottom:6px;">Máy POS cảm ứng all-in-one</div>
+          <div style="font-size:12.5px; color:#8A8A8A; margin-bottom:12px; line-height:1.5;">Màn hình cảm ứng 15.6", tích hợp sẵn hệ điều hành bán hàng</div>
+          <div style="font-size:18px; font-weight:900; color:#C8102E;">4.300.000đ</div>
+        </div>
+
+        <div style="border:1px solid #F0E3E4; border-radius:16px; padding:20px; background:#fff;">
+          <div style="width:100%; aspect-ratio:1/1; border-radius:12px; background:#fff; display:flex; align-items:center; justify-content:center; margin-bottom:14px; overflow:hidden; border:1px solid #F5E2E4;">
+            <img src="assets/tb-sunmi-d2.png" alt="Máy POS Sunmi D2 2 màn hình" style="width:100%; height:100%; object-fit:contain; padding:8px;">
+          </div>
+          <div style="font-weight:800; font-size:14.5px; margin-bottom:6px;">Máy POS Sunmi D2 2 màn hình</div>
+          <div style="font-size:12.5px; color:#8A8A8A; margin-bottom:12px; line-height:1.5;">Màn hình cảm ứng kép, chạy Android, thiết kế nhỏ gọn</div>
+          <div style="font-size:18px; font-weight:900; color:#C8102E;">5.100.000đ</div>
+        </div>
+
+        <div style="border:1px solid #F0E3E4; border-radius:16px; padding:20px; background:#fff;">
+          <div style="width:100%; aspect-ratio:1/1; border-radius:12px; background:#fff; display:flex; align-items:center; justify-content:center; margin-bottom:14px; overflow:hidden; border:1px solid #F5E2E4;">
+            <img src="assets/tb-pos-win-j1900.jpg" alt="Máy POS Windows 2 màn hình J1900" style="width:100%; height:100%; object-fit:contain; padding:8px;">
+          </div>
+          <div style="font-weight:800; font-size:14.5px; margin-bottom:6px;">Máy POS Windows 2 màn hình J1900</div>
+          <div style="font-size:12.5px; color:#8A8A8A; margin-bottom:12px; line-height:1.5;">Cấu hình J1900, chạy Windows 10, 2 màn hình cảm ứng</div>
+          <div style="font-size:18px; font-weight:900; color:#C8102E;">6.800.000đ</div>
+        </div>
+
+        <div style="border:1px solid #F0E3E4; border-radius:16px; padding:20px; background:#fff;">
+          <div style="width:100%; aspect-ratio:1/1; border-radius:12px; background:#fff; display:flex; align-items:center; justify-content:center; margin-bottom:14px; overflow:hidden; border:1px solid #F5E2E4;">
+            <img src="assets/tb-pos-android-2man.jpg" alt="Máy POS Android 2 màn hình" style="width:100%; height:100%; object-fit:contain; padding:8px;">
+          </div>
+          <div style="font-weight:800; font-size:14.5px; margin-bottom:6px;">Máy POS Android 2 màn hình</div>
+          <div style="font-size:12.5px; color:#8A8A8A; margin-bottom:12px; line-height:1.5;">Cấu hình mới, 2 màn hình cảm ứng, chạy Android mượt mà</div>
+          <div style="font-size:18px; font-weight:900; color:#C8102E;">7.200.000đ</div>
+        </div>
+
+        <div style="border:1px solid #F0E3E4; border-radius:16px; padding:20px; background:#fff;">
+          <div style="width:100%; aspect-ratio:1/1; border-radius:12px; background:#fff; display:flex; align-items:center; justify-content:center; margin-bottom:14px; overflow:hidden; border:1px solid #F5E2E4;">
+            <img src="assets/tb-sunmi-v2.jpg" alt="Máy POS cầm tay Sunmi V2" style="width:100%; height:100%; object-fit:contain; padding:8px;">
+          </div>
+          <div style="font-weight:800; font-size:14.5px; margin-bottom:6px;">Máy POS cầm tay Sunmi V2</div>
+          <div style="font-size:12.5px; color:#8A8A8A; margin-bottom:12px; line-height:1.5;">Tích hợp máy in hóa đơn, màn hình cảm ứng, dùng di động</div>
+          <div style="font-size:18px; font-weight:900; color:#C8102E;">3.100.000đ</div>
+        </div>
+
+        <div style="border:1px solid #F0E3E4; border-radius:16px; padding:20px; background:#fff;">
+          <div style="width:100%; aspect-ratio:1/1; border-radius:12px; background:#fff; display:flex; align-items:center; justify-content:center; margin-bottom:14px; overflow:hidden; border:1px solid #F5E2E4;">
+            <img src="assets/tb-may-in-xprinter-den.jpg" alt="Máy in hóa đơn nhiệt K80" style="width:100%; height:100%; object-fit:contain; padding:14px;">
+          </div>
+          <div style="font-weight:800; font-size:14.5px; margin-bottom:6px;">Máy in hóa đơn nhiệt K80</div>
+          <div style="font-size:12.5px; color:#8A8A8A; margin-bottom:12px; line-height:1.5;">Tốc độ in nhanh, kết nối USB/LAN/Wifi</div>
+          <div style="font-size:18px; font-weight:900; color:#C8102E;">1.200.000đ</div>
+        </div>
+
+        <div style="border:1px solid #F0E3E4; border-radius:16px; padding:20px; background:#fff;">
+          <div style="width:100%; aspect-ratio:1/1; border-radius:12px; background:#fff; display:flex; align-items:center; justify-content:center; margin-bottom:14px; overflow:hidden; border:1px solid #F5E2E4;">
+            <img src="assets/tb-pos-cam-ung.jpg" alt="Máy in hóa đơn nhiệt Xprinter mini" style="width:100%; height:100%; object-fit:contain; padding:14px;">
+          </div>
+          <div style="font-weight:800; font-size:14.5px; margin-bottom:6px;">Máy in tem nhãn mã vạch Xprinter</div>
+          <div style="font-size:12.5px; color:#8A8A8A; margin-bottom:12px; line-height:1.5;">Thiết kế nhỏ gọn, in nhanh, cắt giấy tự động</div>
+          <div style="font-size:18px; font-weight:900; color:#C8102E;">1.650.000đ</div>
+        </div>
+
+        <div style="border:1px solid #F0E3E4; border-radius:16px; padding:20px; background:#fff;">
+          <div style="width:100%; aspect-ratio:1/1; border-radius:12px; background:#fff; display:flex; align-items:center; justify-content:center; margin-bottom:14px; overflow:hidden; border:1px solid #F5E2E4;">
+            <img src="assets/tb-xprinter-tem-nhan.png" alt="Máy in tem nhãn mã vạch" style="width:100%; height:100%; object-fit:contain; padding:14px;">
+          </div>
+          <div style="font-weight:800; font-size:14.5px; margin-bottom:6px;">Máy in tem nhãn mã vạch</div>
+          <div style="font-size:12.5px; color:#8A8A8A; margin-bottom:12px; line-height:1.5;">In tem giá, mã vạch sản phẩm sắc nét, rõ ràng</div>
+          <div style="font-size:18px; font-weight:900; color:#C8102E;">1.800.000đ</div>
+        </div>
+
+        <div style="border:1px solid #F0E3E4; border-radius:16px; padding:20px; background:#fff;">
+          <div style="width:100%; aspect-ratio:1/1; border-radius:12px; background:#fff; display:flex; align-items:center; justify-content:center; margin-bottom:14px; overflow:hidden; border:1px solid #F5E2E4;">
+            <img src="assets/tb-may-quet-don-tia.jpeg" alt="Máy quét mã vạch cầm tay" style="width:100%; height:100%; object-fit:contain; padding:14px;">
+          </div>
+          <div style="font-weight:800; font-size:14.5px; margin-bottom:6px;">Máy quét mã vạch cầm tay</div>
+          <div style="font-size:12.5px; color:#8A8A8A; margin-bottom:12px; line-height:1.5;">Quét nhanh, nhạy, hỗ trợ mã QR thanh toán</div>
+          <div style="font-size:18px; font-weight:900; color:#C8102E;">780.000đ</div>
+        </div>
+
+        <div style="border:1px solid #F0E3E4; border-radius:16px; padding:20px; background:#fff;">
+          <div style="width:100%; aspect-ratio:1/1; border-radius:12px; background:#fff; display:flex; align-items:center; justify-content:center; margin-bottom:14px; overflow:hidden; border:1px solid #F5E2E4;">
+            <img src="assets/tb-may-quet-datamax-2.png" alt="Máy quét mã vạch để bàn" style="width:100%; height:100%; object-fit:contain; padding:14px;">
+          </div>
+          <div style="font-weight:800; font-size:14.5px; margin-bottom:6px;">Máy quét mã vạch để bàn</div>
+          <div style="font-size:12.5px; color:#8A8A8A; margin-bottom:12px; line-height:1.5;">Quét đa tia không cần cầm, tốc độ cao</div>
+          <div style="font-size:18px; font-weight:900; color:#C8102E;">1.100.000đ</div>
+        </div>
+
+      </div>
+
+      <div style="max-width:1280px; margin:24px auto 0; text-align:center;">
+        <p style="font-size:13.5px; color:#9A9A9A; margin:0 0 18px;">* Giá tham khảo, chưa bao gồm VAT. Liên hệ để nhận báo giá combo thiết bị ưu đãi nhất.</p>
+        <a href="#" onClick="{{ openModalClick }}" style-hover="transform:translateY(-4px); box-shadow:0 10px 22px rgba(200,16,46,0.2);" style="display:inline-block; background:#fff; color:#C8102E; font-weight:700; font-size:15px; padding:14px 28px; border-radius:10px; transition:all .15s ease; border:1.5px solid #C8102E;">Nhận báo giá combo thiết bị</a>
+      </div>
+    </div>
+
+  </section>
+  </sc-if>
+
+  <!-- ============ TÍNH NĂNG (TAB) ============ -->
+  <sc-if value="{{ isTinhNang }}" hint-placeholder-val="{{ false }}">
+  <section data-screen-label="Tính năng — Tab" style="padding:32px 48px 0; background:#fff;">
+    <a href="#" onClick="{{ goHome }}" style="display:inline-flex; align-items:center; gap:8px; color:#C8102E; font-weight:700; font-size:14px;">← Quay lại trang chủ</a>
+  </section>
+  <section data-screen-label="Tính năng" id="tinh-nang" style="padding:32px 48px 90px; background:#fff;">
+    <div style="text-align:center; max-width:760px; margin:0 auto 56px;">
+      <div style="color:#C8102E; font-weight:700; font-size:13.5px; letter-spacing:1.5px; margin-bottom:12px;">TÍNH NĂNG</div>
+      <h2 style="font-size:36px; font-weight:900; margin:0 0 14px; color:#1A1A1A;">Đầy đủ tính năng cho mọi mô hình kinh doanh</h2>
+      <p style="font-size:16px; color:#5A5A5A; margin:0; line-height:1.6;">Hako POS tối ưu riêng cho mô hình F&amp;B (nhà hàng, quán ăn, cafe) và mô hình Bán lẻ — áp dụng cho toàn bộ gói phần mềm, kèm đào tạo và triển khai tận nơi miễn phí.</p>
+    </div>
+
+    <!-- Feature block 1: Bán hàng & Thanh toán (image left) -->
+    <div data-rg="1" style="display:grid; grid-template-columns:1fr 1fr; gap:64px; max-width:1160px; margin:0 auto 100px; align-items:center;">
+      <div style="background:linear-gradient(155deg,#FFF3F3,#FAFAFA); border:1px solid #F0E3E4; border-radius:22px; padding:26px; box-shadow:0 24px 56px -28px rgba(0,0,0,0.18);">
+        <div style="background:#fff; border-radius:16px; padding:20px; border:1px solid #F0E3E4; box-shadow:0 12px 30px -20px rgba(0,0,0,0.15);">
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
+            <div><div style="font-weight:800; font-size:14.5px; color:#1A1A1A;">Màn hình bán hàng</div><div style="font-size:11.5px; color:#9A9A9A; margin-top:2px;">Chọn nhanh theo món / sản phẩm</div></div>
+            <span style="background:#E9FBEF; color:#1E9E5A; font-weight:700; font-size:11px; padding:6px 11px; border-radius:100px; white-space:nowrap; display:flex; align-items:center; gap:5px;"><span style="width:6px; height:6px; border-radius:50%; background:#1E9E5A;"></span>Đang mở ca</span>
+          </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1.1fr; gap:10px;">
+            <div style="background:#FAFAFA; border:1px solid #F0E3E4; border-radius:12px; padding:10px; text-align:center;"><div style="width:100%; aspect-ratio:1/1; border-radius:9px; margin-bottom:7px; overflow:hidden; box-shadow:0 6px 14px -8px rgba(0,0,0,0.25);"><img src="assets/menu-tra-sua.png" alt="Trà sữa" style="width:100%; height:100%; object-fit:cover;"></div><div style="font-size:11px; font-weight:700; color:#1A1A1A; margin-bottom:5px;">Trà sữa</div><div style="display:inline-block; background:#FDE8EA; border-radius:6px; padding:3px 8px; font-size:11px; font-weight:900; color:#C8102E;">45.000đ</div></div>
+            <div style="background:#FAFAFA; border:1px solid #F0E3E4; border-radius:12px; padding:10px; text-align:center;"><div style="width:100%; aspect-ratio:1/1; border-radius:9px; margin-bottom:7px; overflow:hidden; box-shadow:0 6px 14px -8px rgba(0,0,0,0.25);"><img src="assets/menu-ca-phe.png" alt="Cà phê" style="width:100%; height:100%; object-fit:cover;"></div><div style="font-size:11px; font-weight:700; color:#1A1A1A; margin-bottom:5px;">Cà phê</div><div style="display:inline-block; background:#FDE8EA; border-radius:6px; padding:3px 8px; font-size:11px; font-weight:900; color:#C8102E;">35.000đ</div></div>
+            <div style="background:#FAFAFA; border:1px solid #F0E3E4; border-radius:12px; padding:10px; text-align:center;"><div style="width:100%; aspect-ratio:1/1; border-radius:9px; margin-bottom:7px; overflow:hidden; box-shadow:0 6px 14px -8px rgba(0,0,0,0.25);"><img src="assets/menu-banh-ngot.png" alt="Bánh ngọt" style="width:100%; height:100%; object-fit:cover;"></div><div style="font-size:11px; font-weight:700; color:#1A1A1A; margin-bottom:5px;">Bánh ngọt</div><div style="display:inline-block; background:#FDE8EA; border-radius:6px; padding:3px 8px; font-size:11px; font-weight:900; color:#C8102E;">28.000đ</div></div>
+            <div style="background:#fff; border:1px solid #F0E3E4; border-radius:12px; padding:13px; box-shadow:0 6px 16px -10px rgba(0,0,0,0.2);">
+              <div style="display:flex; justify-content:space-between; font-size:11px; font-weight:700; color:#1A1A1A; margin-bottom:8px;"><span>Giỏ hàng</span><span>3 món</span></div>
+              <div style="font-size:10.5px; color:#6A6A6A; display:flex; justify-content:space-between; margin-bottom:4px;"><span>Trà sữa x1</span><span>45K</span></div>
+              <div style="font-size:10.5px; color:#6A6A6A; display:flex; justify-content:space-between; margin-bottom:8px;"><span>Cà phê x2</span><span>70K</span></div>
+              <div style="border-top:1px solid #F0E3E4; padding-top:8px; display:flex; justify-content:space-between; font-weight:800; font-size:13px; color:#C8102E; margin-bottom:10px;"><span>Tổng</span><span>115.000đ</span></div>
+              <div style="background:#C8102E; color:#fff; text-align:center; font-weight:700; font-size:11.5px; padding:9px; border-radius:9px; box-shadow:0 8px 16px -8px rgba(200,16,46,0.5);">Thanh toán</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div style="display:inline-block; background:#FDE8EA; color:#C8102E; font-weight:700; font-size:13px; padding:8px 16px; border-radius:100px; margin-bottom:18px;">Bán hàng &amp; Thanh toán</div>
+        <h3 style="font-size:26px; font-weight:900; color:#1A1A1A; margin:0 0 20px; line-height:1.3;">Tạo đơn nhanh, thanh toán linh hoạt tại quầy</h3>
+        <div style="display:flex; flex-direction:column; gap:14px;">
+          <div style="display:flex; gap:10px; align-items:flex-start; font-size:14.5px; color:#3A3A3A; line-height:1.5;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Tạo đơn hàng nhanh, hỗ trợ báo bếp, quét mã vạch và in bill hóa đơn / bill bếp tự động</span></div>
+          <div style="display:flex; gap:10px; align-items:flex-start; font-size:14.5px; color:#3A3A3A; line-height:1.5;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Order qua web, tạo mã QR gọi món tại bàn, điều chỉnh giá bán theo từng khách hàng / sản phẩm</span></div>
+          <div style="display:flex; gap:10px; align-items:flex-start; font-size:14.5px; color:#3A3A3A; line-height:1.5;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Thanh toán đa dạng: tiền mặt, thẻ, MoMo, loa đọc chuyển khoản</span></div>
+          <div style="display:flex; gap:10px; align-items:flex-start; font-size:14.5px; color:#3A3A3A; line-height:1.5;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Ghi nợ khách hàng, ưu đãi voucher tích điểm và xuất hóa đơn điện tử</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Feature block 2: Báo cáo & phân tích (image right) -->
+    <div data-rg="1" style="display:grid; grid-template-columns:1fr 1fr; gap:64px; max-width:1160px; margin:0 auto 100px; align-items:center;">
+      <div data-rg-child="reset-order" style="order:2;">
+        <div style="display:inline-block; background:#FDE8EA; color:#C8102E; font-weight:700; font-size:13px; padding:8px 16px; border-radius:100px; margin-bottom:18px;">Báo cáo &amp; Phân tích</div>
+        <h3 style="font-size:26px; font-weight:900; color:#1A1A1A; margin:0 0 20px; line-height:1.3;">Nắm doanh thu, lợi nhuận theo thời gian thực</h3>
+        <div style="display:flex; flex-direction:column; gap:14px;">
+          <div style="display:flex; gap:10px; align-items:flex-start; font-size:14.5px; color:#3A3A3A; line-height:1.5;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Báo cáo doanh thu theo ngày / tuần / tháng / năm</span></div>
+          <div style="display:flex; gap:10px; align-items:flex-start; font-size:14.5px; color:#3A3A3A; line-height:1.5;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Báo cáo lợi nhuận, thu - chi và nguyên vật liệu tiêu hao</span></div>
+          <div style="display:flex; gap:10px; align-items:flex-start; font-size:14.5px; color:#3A3A3A; line-height:1.5;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Báo cáo tồn kho, nhập hàng, khách hàng và nhân viên</span></div>
+          <div style="display:flex; gap:10px; align-items:flex-start; font-size:14.5px; color:#3A3A3A; line-height:1.5;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Xem báo cáo mọi lúc, mọi nơi trên điện thoại</span></div>
+        </div>
+      </div>
+      <div style="order:1; background:linear-gradient(155deg,#FFF3F3,#FAFAFA); border:1px solid #F0E3E4; border-radius:22px; padding:26px; box-shadow:0 24px 56px -28px rgba(0,0,0,0.18);">
+        <div style="background:#fff; border-radius:16px; padding:20px; border:1px solid #F0E3E4; box-shadow:0 12px 30px -20px rgba(0,0,0,0.15);">
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
+            <div><div style="font-weight:800; font-size:14.5px; color:#1A1A1A;">Báo cáo doanh thu</div><div style="font-size:11px; color:#9A9A9A; margin-top:2px;">Tháng này · Cập nhật hôm nay</div></div>
+            <span style="background:#E9FBEF; color:#1E9E5A; font-weight:700; font-size:11px; padding:6px 11px; border-radius:100px; white-space:nowrap; display:flex; align-items:center; gap:4px;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"></path></svg>+18%</span>
+          </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-bottom:18px;">
+            <div style="background:#FAFAFA; border:1px solid #F0E3E4; border-radius:12px; padding:12px;"><div style="font-size:10px; color:#8A8A8A; font-weight:600;">Doanh thu</div><div style="font-size:16px; font-weight:900; color:#1A1A1A;">182.4tr</div></div>
+            <div style="background:#FAFAFA; border:1px solid #F0E3E4; border-radius:12px; padding:12px;"><div style="font-size:10px; color:#8A8A8A; font-weight:600;">Lợi nhuận</div><div style="font-size:16px; font-weight:900; color:#1A1A1A;">64.1tr</div></div>
+            <div style="background:#FAFAFA; border:1px solid #F0E3E4; border-radius:12px; padding:12px;"><div style="font-size:10px; color:#8A8A8A; font-weight:600;">Đơn hàng</div><div style="font-size:16px; font-weight:900; color:#1A1A1A;">1.284</div></div>
+          </div>
+          <div style="background:#FAFAFA; border:1px solid #F0E3E4; border-radius:14px; padding:18px 18px 12px;">
+            <svg viewBox="0 0 280 96" width="100%" height="96" preserveAspectRatio="none">
+              <polyline points="0,70 40,58 80,64 120,40 160,48 200,22 240,34 280,14" fill="none" stroke="#C8102E" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></polyline>
+              <polygon points="0,70 40,58 80,64 120,40 160,48 200,22 240,34 280,14 280,96 0,96" fill="url(#hakoChartGrad)" opacity="0.35"></polygon>
+              <defs><linearGradient id="hakoChartGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#C8102E"></stop><stop offset="100%" stop-color="#C8102E" stop-opacity="0"></stop></linearGradient></defs>
+              <circle cx="280" cy="14" r="5" fill="#C8102E"></circle>
+            </svg>
+            <div style="display:flex; justify-content:space-between; font-size:10px; color:#9A9A9A; font-weight:600; margin-top:6px;"><span>T2</span><span>T3</span><span>T4</span><span>T5</span><span>T6</span><span>T7</span><span>CN</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Feature block 3: Quản lý kho (image left) -->
+    <div data-rg="1" style="display:grid; grid-template-columns:1fr 1fr; gap:64px; max-width:1160px; margin:0 auto 100px; align-items:center;">
+      <div style="background:linear-gradient(155deg,#FFF3F3,#FAFAFA); border:1px solid #F0E3E4; border-radius:22px; padding:26px; box-shadow:0 24px 56px -28px rgba(0,0,0,0.18);">
+        <div style="background:#fff; border-radius:16px; padding:20px; border:1px solid #F0E3E4; box-shadow:0 12px 30px -20px rgba(0,0,0,0.15);">
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
+            <div style="font-weight:800; font-size:14.5px; color:#1A1A1A;">Tồn kho sản phẩm</div>
+            <span style="background:#FDECEC; color:#C8102E; font-weight:700; font-size:11px; padding:5px 10px; border-radius:100px;">1 sắp hết</span>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:12px;">
+            <div style="padding:12px; background:#FAFAFA; border-radius:12px;">
+              <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:7px;"><span style="font-size:12.5px; color:#1A1A1A; font-weight:700;">Trà sữa trân châu</span><span style="font-size:11.5px; color:#1E9E5A; font-weight:700;">128 / 150</span></div>
+              <div style="height:6px; border-radius:100px; background:#EDEDED; overflow:hidden;"><div style="height:100%; width:85%; background:#1E9E5A; border-radius:100px;"></div></div>
+            </div>
+            <div style="padding:12px; background:#FAFAFA; border-radius:12px;">
+              <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:7px;"><span style="font-size:12.5px; color:#1A1A1A; font-weight:700;">Hạt cà phê Robusta</span><span style="font-size:11.5px; color:#F4A400; font-weight:700;">12 / 50</span></div>
+              <div style="height:6px; border-radius:100px; background:#EDEDED; overflow:hidden;"><div style="height:100%; width:24%; background:#F4A400; border-radius:100px;"></div></div>
+            </div>
+            <div style="padding:12px; background:#FDECEC; border-radius:12px;">
+              <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:7px;"><span style="font-size:12.5px; color:#1A1A1A; font-weight:700;">Ly nhựa 500ml</span><span style="font-size:11.5px; color:#C8102E; font-weight:700;">6 / 100 · Sắp hết</span></div>
+              <div style="height:6px; border-radius:100px; background:#F5D9DC; overflow:hidden;"><div style="height:100%; width:6%; background:#C8102E; border-radius:100px;"></div></div>
+            </div>
+            <div style="padding:12px; background:#FAFAFA; border-radius:12px;">
+              <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:7px;"><span style="font-size:12.5px; color:#1A1A1A; font-weight:700;">Bánh mousse</span><span style="font-size:11.5px; color:#1E9E5A; font-weight:700;">46 / 60</span></div>
+              <div style="height:6px; border-radius:100px; background:#EDEDED; overflow:hidden;"><div style="height:100%; width:76%; background:#1E9E5A; border-radius:100px;"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div style="display:inline-block; background:#FDE8EA; color:#C8102E; font-weight:700; font-size:13px; padding:8px 16px; border-radius:100px; margin-bottom:18px;">Quản lý kho hàng</div>
+        <h3 style="font-size:26px; font-weight:900; color:#1A1A1A; margin:0 0 20px; line-height:1.3;">Kiểm soát tồn kho chính xác theo từng chi nhánh</h3>
+        <div style="display:flex; flex-direction:column; gap:14px;">
+          <div style="display:flex; gap:10px; align-items:flex-start; font-size:14.5px; color:#3A3A3A; line-height:1.5;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Theo dõi tồn kho theo từng sản phẩm, từng chi nhánh</span></div>
+          <div style="display:flex; gap:10px; align-items:flex-start; font-size:14.5px; color:#3A3A3A; line-height:1.5;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Xuất / nhập / kiểm kê / chuyển kho chỉ trong vài thao tác</span></div>
+          <div style="display:flex; gap:10px; align-items:flex-start; font-size:14.5px; color:#3A3A3A; line-height:1.5;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Quản lý định lượng, nguyên vật liệu tiêu hao cho từng món</span></div>
+          <div style="display:flex; gap:10px; align-items:flex-start; font-size:14.5px; color:#3A3A3A; line-height:1.5;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Cảnh báo tự động khi sản phẩm sắp hết hàng</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Feature block 4: Quản lý khách hàng (image right) -->
+    <div data-rg="1" style="display:grid; grid-template-columns:1fr 1fr; gap:64px; max-width:1160px; margin:0 auto 100px; align-items:center;">
+      <div data-rg-child="reset-order" style="order:2;">
+        <div style="display:inline-block; background:#FDE8EA; color:#C8102E; font-weight:700; font-size:13px; padding:8px 16px; border-radius:100px; margin-bottom:18px;">Quản lý khách hàng</div>
+        <h3 style="font-size:26px; font-weight:900; color:#1A1A1A; margin:0 0 20px; line-height:1.3;">Chăm sóc khách hàng, giữ chân khách quay lại</h3>
+        <div style="display:flex; flex-direction:column; gap:14px;">
+          <div style="display:flex; gap:10px; align-items:flex-start; font-size:14.5px; color:#3A3A3A; line-height:1.5;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Chính sách giá và chương trình khuyến mãi riêng theo từng khách hàng</span></div>
+          <div style="display:flex; gap:10px; align-items:flex-start; font-size:14.5px; color:#3A3A3A; line-height:1.5;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Tự động tích điểm, voucher, mua hàng tặng hàng</span></div>
+          <div style="display:flex; gap:10px; align-items:flex-start; font-size:14.5px; color:#3A3A3A; line-height:1.5;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Ghi nợ, theo dõi và trích nợ khách hàng rõ ràng</span></div>
+        </div>
+      </div>
+      <div style="order:1; background:linear-gradient(155deg,#FFF3F3,#FAFAFA); border:1px solid #F0E3E4; border-radius:22px; padding:26px; box-shadow:0 24px 56px -28px rgba(0,0,0,0.18);">
+        <div style="background:#fff; border-radius:16px; padding:20px; border:1px solid #F0E3E4; box-shadow:0 12px 30px -20px rgba(0,0,0,0.15);">
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
+            <div style="font-weight:800; font-size:14.5px; color:#1A1A1A;">Khách hàng thân thiết</div>
+            <span style="background:#FDE8EA; color:#C8102E; font-weight:700; font-size:11px; padding:5px 10px; border-radius:100px;">1.842 khách</span>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:9px;">
+            <div style="display:flex; align-items:center; gap:11px; padding:11px; background:#FAFAFA; border-radius:12px;">
+              <span style="width:36px; height:36px; border-radius:50%; background:linear-gradient(135deg,#FFB74D,#C8102E); color:#fff; font-weight:800; font-size:13px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">T</span>
+              <div style="flex:1;"><div style="font-size:12.5px; font-weight:700; color:#1A1A1A;">Chị Thu Trang</div><div style="font-size:10.5px; color:#8A8A8A;">12 đơn · 1.240 điểm</div></div>
+              <span style="background:#FFF3E0; color:#B45300; font-weight:700; font-size:10.5px; padding:4px 9px; border-radius:100px; white-space:nowrap;">VIP</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:11px; padding:11px; background:#FAFAFA; border-radius:12px;">
+              <span style="width:36px; height:36px; border-radius:50%; background:linear-gradient(135deg,#FF4B57,#C8102E); color:#fff; font-weight:800; font-size:13px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">A</span>
+              <div style="flex:1;"><div style="font-size:12.5px; font-weight:700; color:#1A1A1A;">Anh Minh Khôi</div><div style="font-size:10.5px; color:#8A8A8A;">5 đơn · 480 điểm</div></div>
+              <span style="font-size:11px; color:#C8102E; font-weight:700; white-space:nowrap;">Nợ 45K</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:11px; padding:11px; background:#FAFAFA; border-radius:12px;">
+              <span style="width:36px; height:36px; border-radius:50%; background:linear-gradient(135deg,#FFB74D,#C8102E); color:#fff; font-weight:800; font-size:13px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">L</span>
+              <div style="flex:1;"><div style="font-size:12.5px; font-weight:700; color:#1A1A1A;">Chị Ngọc Lan</div><div style="font-size:10.5px; color:#8A8A8A;">28 đơn · 3.150 điểm</div></div>
+              <span style="background:#FFF3E0; color:#B45300; font-weight:700; font-size:10.5px; padding:4px 9px; border-radius:100px; white-space:nowrap;">VIP</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Feature block 5: Quản lý nhân viên (image left) -->
+    <div data-rg="1" style="display:grid; grid-template-columns:1fr 1fr; gap:64px; max-width:1160px; margin:0 auto 100px; align-items:center;">
+      <div style="background:linear-gradient(155deg,#FFF3F3,#FAFAFA); border:1px solid #F0E3E4; border-radius:22px; padding:26px; box-shadow:0 24px 56px -28px rgba(0,0,0,0.18);">
+        <div style="background:#fff; border-radius:16px; padding:20px; border:1px solid #F0E3E4; box-shadow:0 12px 30px -20px rgba(0,0,0,0.15);">
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
+            <div style="font-weight:800; font-size:14.5px; color:#1A1A1A;">Nhân viên đang làm việc</div>
+            <span style="background:#E9FBEF; color:#1E9E5A; font-weight:700; font-size:11px; padding:5px 10px; border-radius:100px; display:flex; align-items:center; gap:5px;"><span style="width:6px; height:6px; border-radius:50%; background:#1E9E5A;"></span>3 online</span>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:10px;">
+            <div style="display:flex; align-items:center; gap:11px; padding:11px; background:#FAFAFA; border-radius:12px;"><span style="position:relative; flex-shrink:0;"><span style="width:34px; height:34px; border-radius:50%; background:linear-gradient(135deg,#FF4B57,#C8102E); color:#fff; font-weight:800; font-size:12.5px; display:flex; align-items:center; justify-content:center;">H</span><span style="position:absolute; bottom:-1px; right:-1px; width:10px; height:10px; border-radius:50%; background:#1E9E5A; border:2px solid #FAFAFA;"></span></span><div style="flex:1;"><div style="font-size:12.5px; font-weight:700; color:#1A1A1A;">Thu Hương</div><div style="font-size:10.5px; color:#8A8A8A;">Thu ngân · Ca sáng</div></div></div>
+            <div style="display:flex; align-items:center; gap:11px; padding:11px; background:#FAFAFA; border-radius:12px;"><span style="position:relative; flex-shrink:0;"><span style="width:34px; height:34px; border-radius:50%; background:linear-gradient(135deg,#FF4B57,#C8102E); color:#fff; font-weight:800; font-size:12.5px; display:flex; align-items:center; justify-content:center;">D</span><span style="position:absolute; bottom:-1px; right:-1px; width:10px; height:10px; border-radius:50%; background:#1E9E5A; border:2px solid #FAFAFA;"></span></span><div style="flex:1;"><div style="font-size:12.5px; font-weight:700; color:#1A1A1A;">Văn Dũng</div><div style="font-size:10.5px; color:#8A8A8A;">Pha chế · Ca chiều</div></div></div>
+            <div style="display:flex; align-items:center; gap:11px; padding:11px; background:#FAFAFA; border-radius:12px;"><span style="position:relative; flex-shrink:0;"><span style="width:34px; height:34px; border-radius:50%; background:linear-gradient(135deg,#FF4B57,#C8102E); color:#fff; font-weight:800; font-size:12.5px; display:flex; align-items:center; justify-content:center;">L</span><span style="position:absolute; bottom:-1px; right:-1px; width:10px; height:10px; border-radius:50%; background:#1E9E5A; border:2px solid #FAFAFA;"></span></span><div style="flex:1;"><div style="font-size:12.5px; font-weight:700; color:#1A1A1A;">Ngọc Linh</div><div style="font-size:10.5px; color:#8A8A8A;">Quản lý · Toàn ca</div></div><span style="background:#FDE8EA; color:#C8102E; font-weight:700; font-size:10px; padding:4px 8px; border-radius:100px; white-space:nowrap;">Admin</span></div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div style="display:inline-block; background:#FDE8EA; color:#C8102E; font-weight:700; font-size:13px; padding:8px 16px; border-radius:100px; margin-bottom:18px;">Quản lý nhân viên</div>
+        <h3 style="font-size:26px; font-weight:900; color:#1A1A1A; margin:0 0 20px; line-height:1.3;">Quản lý nhân sự, phân quyền rõ ràng theo từng chi nhánh</h3>
+        <div style="display:flex; flex-direction:column; gap:14px;">
+          <div style="display:flex; gap:10px; align-items:flex-start; font-size:14.5px; color:#3A3A3A; line-height:1.5;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Quản lý nhân viên theo từng chi nhánh</span></div>
+          <div style="display:flex; gap:10px; align-items:flex-start; font-size:14.5px; color:#3A3A3A; line-height:1.5;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Quản lý ca làm, doanh thu theo từng nhân viên theo ngày / tháng</span></div>
+          <div style="display:flex; gap:10px; align-items:flex-start; font-size:14.5px; color:#3A3A3A; line-height:1.5;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Phân quyền tài khoản riêng cho từng vị trí nhân viên</span></div>
+          <div style="display:flex; gap:10px; align-items:flex-start; font-size:14.5px; color:#3A3A3A; line-height:1.5;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Tạo không giới hạn tài khoản nhân viên</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Feature block 6: Thiết lập & đa thiết bị (image left) -->
+    <div data-rg="1" style="display:grid; grid-template-columns:1fr 1fr; gap:64px; max-width:1160px; margin:0 auto 20px; align-items:center;">
+      <div style="background:linear-gradient(155deg,#FFF3F3,#FAFAFA); border:1px solid #F0E3E4; border-radius:22px; padding:26px; box-shadow:0 24px 56px -28px rgba(0,0,0,0.18);">
+        <div style="background:linear-gradient(160deg,#FDE0E2,#FFF3F3); border-radius:16px; padding:36px 24px 28px; display:flex; align-items:flex-end; justify-content:center; gap:28px; box-shadow:0 12px 30px -20px rgba(200,16,46,0.18);">
+          <div style="text-align:center;">
+            <div style="width:36px; height:62px; border-radius:9px; background:#C8102E; padding:3px; margin:0 auto 10px; box-shadow:0 8px 18px -8px rgba(200,16,46,0.45);"><div style="width:100%; height:100%; border-radius:6px; background:#fff; display:flex; align-items:center; justify-content:center;"><div style="width:16px; height:16px; border-radius:5px; background:#C8102E;"></div></div></div>
+            <div style="font-size:11px; color:#7A2A30; font-weight:600;">Điện thoại</div>
+          </div>
+          <div style="text-align:center;">
+            <div style="width:56px; height:74px; border-radius:10px; background:#C8102E; padding:4px; margin:0 auto 10px; box-shadow:0 8px 18px -8px rgba(200,16,46,0.45);"><div style="width:100%; height:100%; border-radius:6px; background:#fff; display:flex; align-items:center; justify-content:center;"><div style="width:26px; height:19px; border-radius:4px; background:#C8102E;"></div></div></div>
+            <div style="font-size:11px; color:#7A2A30; font-weight:600;">Máy tính bảng</div>
+          </div>
+          <div style="text-align:center;">
+            <div style="margin:0 auto 10px;">
+              <div style="width:84px; height:56px; border-radius:9px 9px 0 0; background:#C8102E; padding:5px 5px 0; box-shadow:0 8px 18px -8px rgba(200,16,46,0.45);"><div style="width:100%; height:100%; border-radius:4px 4px 0 0; background:#fff; display:flex; align-items:center; justify-content:center;"><div style="width:34px; height:7px; border-radius:2px; background:#C8102E;"></div></div></div>
+              <div style="width:98px; height:8px; background:linear-gradient(180deg,#B00D26,#8A0A1E); border-radius:0 0 7px 7px; margin:0 auto;"></div>
+            </div>
+            <div style="font-size:11px; color:#7A2A30; font-weight:600;">Laptop</div>
+          </div>
+          <div style="text-align:center;">
+            <div style="margin:0 auto 10px; display:flex; flex-direction:column; align-items:center;">
+              <div style="width:60px; height:68px; border-radius:8px; background:#C8102E; padding:4px; margin-bottom:3px; box-shadow:0 8px 18px -8px rgba(200,16,46,0.45);"><div style="width:100%; height:100%; border-radius:5px; background:#fff; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px;"><div style="width:30px; height:6px; border-radius:2px; background:#C8102E;"></div><div style="width:30px; height:6px; border-radius:2px; background:#F0A6AD;"></div></div></div>
+              <div style="width:16px; height:10px; background:#B00D26;"></div>
+              <div style="width:38px; height:6px; background:#B00D26; border-radius:3px;"></div>
+            </div>
+            <div style="font-size:11px; color:#7A2A30; font-weight:600;">Máy POS</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div style="display:inline-block; background:#FDE8EA; color:#C8102E; font-weight:700; font-size:13px; padding:8px 16px; border-radius:100px; margin-bottom:18px;">Thiết lập &amp; Đa thiết bị</div>
+        <h3 style="font-size:26px; font-weight:900; color:#1A1A1A; margin:0 0 20px; line-height:1.3;">Dùng được trên mọi thiết bị, không giới hạn</h3>
+        <div style="display:flex; flex-direction:column; gap:14px;">
+          <div style="display:flex; gap:10px; align-items:flex-start; font-size:14.5px; color:#3A3A3A; line-height:1.5;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Sử dụng không giới hạn: điện thoại, máy tính bảng, laptop, máy POS</span></div>
+          <div style="display:flex; gap:10px; align-items:flex-start; font-size:14.5px; color:#3A3A3A; line-height:1.5;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Thiết lập in bill từ điện thoại, máy tính bảng, laptop, máy POS và mã PIN riêng cho từng thiết bị</span></div>
+          <div style="display:flex; gap:10px; align-items:flex-start; font-size:14.5px; color:#3A3A3A; line-height:1.5;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Tạo được nhiều tài khoản cho nhân viên, tạo mã QR tại bàn</span></div>
+          <div style="display:flex; gap:10px; align-items:flex-start; font-size:14.5px; color:#3A3A3A; line-height:1.5;"><span style="color:#1E9E5A; font-weight:800;">✔</span><span>Nâng cấp tính năng mới miễn phí, trọn đời</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div style="max-width:1200px; margin:32px auto 0; text-align:center;">
+      <p style="font-size:13.5px; color:#9A9A9A; margin:0 0 20px;">* Áp dụng cho toàn bộ gói phần mềm đăng ký, kèm hỗ trợ đào tạo miễn phí và tư vấn triển khai tận nơi.</p>
+      <a href="#" onClick="{{ goHome }}" style-hover="transform:translateY(-4px); box-shadow:0 10px 22px rgba(200,16,46,0.35);" style="display:inline-block; background:#C8102E; color:#fff; font-weight:700; font-size:15px; padding:15px 30px; border-radius:10px; transition:all .15s ease;">Đăng ký dùng thử 10 ngày</a>
+    </div>
+  </section>
+  </sc-if>
+
+  <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+  <!-- ============ KHÁCH HÀNG NÓI GÌ ============ -->
+  <section data-screen-label="Khách hàng nói gì" style="padding:90px 48px; background:#FFF8F8;">
+    <div style="text-align:center; max-width:700px; margin:0 auto 56px;">
+      <div style="color:#C8102E; font-weight:700; font-size:13.5px; letter-spacing:1.5px; margin-bottom:12px;">KHÁCH HÀNG NÓI GÌ</div>
+      <h2 style="font-size:36px; font-weight:900; margin:0 0 14px; color:#1A1A1A;">Được các chủ cửa hàng tin tưởng</h2>
+    </div>
+    <div data-rg="1" style="display:grid; grid-template-columns:repeat(3,1fr); gap:22px; max-width:1200px; margin:0 auto;">
+      <div style="background:#fff; border:1px solid #F0E3E4; border-radius:16px; overflow:hidden;">
+        <img src="assets/t1-photo.png" alt="Thẩm mỹ viện H&amp;M" style="width:100%; aspect-ratio:16/7; object-fit:cover; display:block;">
+        <div style="padding:24px;">
+          <span style="display:inline-block; background:#FDE8EA; color:#C8102E; font-weight:700; font-size:11.5px; letter-spacing:0.3px; padding:5px 12px; border-radius:100px; margin-bottom:14px;">SALON</span>
+          <p style="font-size:14px; color:#3A3A3A; line-height:1.65; margin:0 0 18px;">"HakoPos giúp chúng tôi tăng doanh thu 35% và quản lý khách hàng dễ dàng hơn"</p>
+          <div style="display:flex; align-items:center; gap:10px; padding-top:16px; border-top:1px solid #F0E3E4;">
+            <img src="assets/t1-avatar.png" alt="" style="width:34px; height:34px; border-radius:50%; object-fit:cover; flex-shrink:0;">
+            <div style="line-height:1.3;"><div style="font-weight:700; font-size:13.5px; color:#1A1A1A;">Thẩm mỹ viện H&amp;M</div><div style="font-size:12px; color:#8A8A8A;">Thẩm mỹ viện H&amp;M</div></div>
+          </div>
+        </div>
+      </div>
+      <div style="background:#fff; border:1px solid #F0E3E4; border-radius:16px; overflow:hidden;">
+        <img src="assets/t2-photo.png" alt="Cafe Vitamin" style="width:100%; aspect-ratio:16/7; object-fit:cover; display:block;">
+        <div style="padding:24px;">
+          <span style="display:inline-block; background:#FDE8EA; color:#C8102E; font-weight:700; font-size:11.5px; letter-spacing:0.3px; padding:5px 12px; border-radius:100px; margin-bottom:14px;">CAFE</span>
+          <p style="font-size:14px; color:#3A3A3A; line-height:1.65; margin:0 0 18px;">"Dễ sử dụng quá, order thanh toán nhanh gọn, thực sự thuận tiện cho nhân viên"</p>
+          <div style="display:flex; align-items:center; gap:10px; padding-top:16px; border-top:1px solid #F0E3E4;">
+            <img src="assets/t2-avatar.png" alt="" style="width:34px; height:34px; border-radius:50%; object-fit:cover; flex-shrink:0;">
+            <div style="line-height:1.3;"><div style="font-weight:700; font-size:13.5px; color:#1A1A1A;">Cafe Vitamin</div><div style="font-size:12px; color:#8A8A8A;">Chuỗi cafe Hà Nội</div></div>
+          </div>
+        </div>
+      </div>
+      <div style="background:#fff; border:1px solid #F0E3E4; border-radius:16px; overflow:hidden;">
+        <img src="assets/t3-photo.png" alt="Bunny Beauty" style="width:100%; aspect-ratio:16/7; object-fit:cover; display:block;">
+        <div style="padding:24px;">
+          <span style="display:inline-block; background:#FDE8EA; color:#C8102E; font-weight:700; font-size:11.5px; letter-spacing:0.3px; padding:5px 12px; border-radius:100px; margin-bottom:14px;">MỸ PHẨM</span>
+          <p style="font-size:14px; color:#3A3A3A; line-height:1.65; margin:0 0 18px;">"Không lo lắng thất thoát dữ liệu, quản lý bán hàng chặt chẽ từ xa 24/7"</p>
+          <div style="display:flex; align-items:center; gap:10px; padding-top:16px; border-top:1px solid #F0E3E4;">
+            <img src="assets/t3-avatar.png" alt="" style="width:34px; height:34px; border-radius:50%; object-fit:cover; flex-shrink:0;">
+            <div style="line-height:1.3;"><div style="font-weight:700; font-size:13.5px; color:#1A1A1A;">Bunny Beauty</div><div style="font-size:12px; color:#8A8A8A;">Spa &amp; làm đẹp</div></div>
+          </div>
+        </div>
+      </div>
+      <div style="background:#fff; border:1px solid #F0E3E4; border-radius:16px; overflow:hidden;">
+        <img src="assets/t4-photo.png" alt="Siêu thị Minh Phát" style="width:100%; aspect-ratio:16/7; object-fit:cover; display:block;">
+        <div style="padding:24px;">
+          <span style="display:inline-block; background:#FDE8EA; color:#C8102E; font-weight:700; font-size:11.5px; letter-spacing:0.3px; padding:5px 12px; border-radius:100px; margin-bottom:14px;">SIÊU THỊ</span>
+          <p style="font-size:14px; color:#3A3A3A; line-height:1.65; margin:0 0 18px;">"Quản lý kho và mã vạch cực kỳ chính xác. Tiết kiệm rất nhiều thời gian kiểm kho."</p>
+          <div style="display:flex; align-items:center; gap:10px; padding-top:16px; border-top:1px solid #F0E3E4;">
+            <img src="assets/t4-avatar.png" alt="" style="width:34px; height:34px; border-radius:50%; object-fit:cover; flex-shrink:0;">
+            <div style="line-height:1.3;"><div style="font-weight:700; font-size:13.5px; color:#1A1A1A;">Siêu thị Minh Phát</div><div style="font-size:12px; color:#8A8A8A;">Bán lẻ thực phẩm</div></div>
+          </div>
+        </div>
+      </div>
+      <div style="background:#fff; border:1px solid #F0E3E4; border-radius:16px; overflow:hidden;">
+        <img src="assets/t5-photo.png" alt="Fashion Hub" style="width:100%; aspect-ratio:16/7; object-fit:cover; display:block;">
+        <div style="padding:24px;">
+          <span style="display:inline-block; background:#FDE8EA; color:#C8102E; font-weight:700; font-size:11.5px; letter-spacing:0.3px; padding:5px 12px; border-radius:100px; margin-bottom:14px;">THỜI TRANG</span>
+          <p style="font-size:14px; color:#3A3A3A; line-height:1.65; margin:0 0 18px;">"Giao diện POS rất đẹp và chuyên nghiệp. Khách hàng ấn tượng với quy trình thanh toán."</p>
+          <div style="display:flex; align-items:center; gap:10px; padding-top:16px; border-top:1px solid #F0E3E4;">
+            <img src="assets/t5-avatar.png" alt="" style="width:34px; height:34px; border-radius:50%; object-fit:cover; flex-shrink:0;">
+            <div style="line-height:1.3;"><div style="font-weight:700; font-size:13.5px; color:#1A1A1A;">Fashion Hub</div><div style="font-size:12px; color:#8A8A8A;">Shop thời trang</div></div>
+          </div>
+        </div>
+      </div>
+      <div style="background:#fff; border:1px solid #F0E3E4; border-radius:16px; overflow:hidden;">
+        <img src="assets/t6-photo.png" alt="Hako Food" style="width:100%; aspect-ratio:16/7; object-fit:cover; display:block;">
+        <div style="padding:24px;">
+          <span style="display:inline-block; background:#FDE8EA; color:#C8102E; font-weight:700; font-size:11.5px; letter-spacing:0.3px; padding:5px 12px; border-radius:100px; margin-bottom:14px;">NHÀ HÀNG</span>
+          <p style="font-size:14px; color:#3A3A3A; line-height:1.65; margin:0 0 18px;">"Tính năng gọi món tại bàn và in bếp tự động giúp giảm sai sót đáng kể."</p>
+          <div style="display:flex; align-items:center; gap:10px; padding-top:16px; border-top:1px solid #F0E3E4;">
+            <img src="assets/t6-avatar.png" alt="" style="width:34px; height:34px; border-radius:50%; object-fit:cover; flex-shrink:0;">
+            <div style="line-height:1.3;"><div style="font-weight:700; font-size:13.5px; color:#1A1A1A;">Bread Food</div><div style="font-size:12px; color:#8A8A8A;">Nhà hàng F&amp;B</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ NHẬN TƯ VẤN ============ -->
+  <section data-screen-label="Nhận tư vấn / Dùng thử" id="tu-van" style="padding:90px 48px; background:linear-gradient(135deg,#D91E36,#A50D24); position:relative; overflow:hidden;">
+    <div id="dung-thu" data-rg="1" style="position:relative; z-index:1; display:grid; grid-template-columns:1fr 1fr; gap:60px; max-width:1200px; margin:0 auto; align-items:center;">
+      <div>
+        <div style="color:#FFC9CE; font-weight:700; font-size:13.5px; letter-spacing:1.5px; margin-bottom:14px;">BẮT ĐẦU NGAY HÔM NAY</div>
+        <h2 style="font-size:36px; font-weight:900; color:#fff; margin:0 0 18px; line-height:1.2;">Dùng thử miễn phí 10 ngày<br>hoặc nhận tư vấn từ chuyên gia</h2>
+        <p style="font-size:16px; color:#FBDADD; line-height:1.65; margin:0 0 28px; max-width:440px;">Đội ngũ Hako POS sẽ liên hệ trong vòng 15 phút để tư vấn giải pháp phù hợp nhất với ngành hàng của bạn.</p>
+        <div style="display:flex; flex-direction:column; gap:16px;">
+          <div style="display:flex; align-items:flex-start; gap:12px; color:#fff; font-size:15px;"><span style="width: 34px; height: 34px; flex-shrink: 0; border-radius: 9px; background: rgba(255, 255, 255, 0.15); display: flex; align-items: center; justify-content: center;">✔</span>Miễn phí toàn bộ tính năng trong 10 ngày</div>
+          <div style="display:flex; align-items:flex-start; gap:12px; color:#fff; font-size:15px;"><span data-om-id="3f95607c:486" style="width: 34px; height: 34px; flex-shrink: 0; border-radius: 9px; background: rgba(255, 255, 255, 0.15); display: flex; align-items: center; justify-content: center;">✔</span>Miễn lắp đặt tận nơi các khi vực ( Hà Nội, TP HCM, Đà Nẵng ), các tỉnh lân cận hỗ trợ online hoặc thu phí triển khai</div>
+          <div style="display:flex; align-items:flex-start; gap:12px; color:#fff; font-size:15px;"><span style="width: 34px; height: 34px; flex-shrink: 0; border-radius: 9px; background: rgba(255, 255, 255, 0.15); display: flex; align-items: center; justify-content: center;">✔</span>Hỗ trợ sau bán hàng 24/7</div>
+        </div>
+      </div>
+
+      <form style="background:#fff; border-radius:18px; padding:34px; box-shadow:0 30px 60px -20px rgba(0,0,0,0.35);" onsubmit="hakoSubmitLead(1); return false;">
+        <div style="font-weight:900; font-size:19px; color:#1A1A1A; margin-bottom:4px;">Đăng ký dùng thử &amp; nhận tư vấn</div>
+        <div style="font-size:13.5px; color:#8A8A8A; margin-bottom:22px;">Điền thông tin, chúng tôi sẽ gọi lại ngay</div>
+        <div style="display:flex; flex-direction:column; gap:14px;">
+          <input id="hako-f1-name" type="text" placeholder="Họ và tên" style="width:100%; padding:13px 16px; border-radius:9px; border:1px solid #E5E5E5; font-size:14.5px; font-family:inherit; background:#FAFAFA;">
+          <input id="hako-f1-phone" type="tel" placeholder="Số điện thoại" style="width:100%; padding:13px 16px; border-radius:9px; border:1px solid #E5E5E5; font-size:14.5px; font-family:inherit; background:#FAFAFA;">
+          <input id="hako-f1-shop" type="text" placeholder="Tên cửa hàng / doanh nghiệp" style="width:100%; padding:13px 16px; border-radius:9px; border:1px solid #E5E5E5; font-size:14.5px; font-family:inherit; background:#FAFAFA;">
+          <select id="hako-f1-category" style="width:100%; padding:13px 16px; border-radius:9px; border:1px solid #E5E5E5; font-size:14.5px; font-family:inherit; background:#FAFAFA; color:#5A5A5A;">
+            <option>Chọn ngành hàng của bạn</option>
+            <option>Bán buôn, bán lẻ</option>
+            <option>Ăn uống, giải trí</option>
+            <option>Sức khỏe, làm đẹp</option>
+            <option>Khách sạn, nhà nghỉ</option>
+            <option>Khác</option>
+          </select>
+          <div id="hako-f1-msg" style="font-size:13px; font-weight:600; display:none;"></div>
+          <button id="hako-f1-btn" type="submit" style-hover="transform:translateY(-4px); box-shadow:0 10px 22px rgba(200,16,46,0.35);" style="width:100%; background:#C8102E; color:#fff; font-weight:700; font-size:16px; padding:15px; border-radius:9px; border:none; cursor:pointer; margin-top:4px; transition:all .15s ease;">Đăng ký dùng thử 10 ngày</button>
+        </div>
+      </form>
+    </div>
+  </section>
+  </sc-if>
+
+  <!-- ============ FOOTER ============ -->
+  <footer data-screen-label="Footer" style="background:#fff; color:#3A3A3A; padding:64px 48px 28px; border-top:1px solid #F0E3E4;">
+    <div data-rg="1" style="max-width:1280px; margin:0 auto; display:grid; grid-template-columns:1.3fr 0.85fr 0.95fr 1.35fr; gap:40px;">
+      <div>
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:16px;">
+          <img src="assets/hako-logo.png" alt="Hako Group" style="height:38px; width:auto; object-fit:contain;">
+          <span style="font-weight:800; font-size:22px; color:#C81E2C; letter-spacing:0.2px;">HakoPOS</span>
+        </div>
+        <p style="font-size:14.5px; line-height:1.7; color:#3A3A3A; font-weight:600; max-width:280px; margin:0;">Phần mềm quản lý bán hàng Hako POS — giải pháp toàn diện cho mọi ngành nghề kinh doanh.</p>
+      </div>
+      <div>
+        <div style="font-weight:800; color:#1A1A1A; font-size:17px; margin-bottom:18px;">Sản phẩm</div>
+        <div style="display:flex; flex-direction:column; gap:13px; font-size:16px;">
+          <a href="#" onClick="{{ goNganhHang }}" style="color:#5A5A5A; font-weight:600;">Ngành hàng</a>
+          <a href="#" onClick="{{ goBangGia }}" style="color:#5A5A5A; font-weight:600;">Bảng giá phần mềm</a>
+          <a href="#" onClick="{{ goTinhNang }}" style="color:#5A5A5A; font-weight:600;">Tính năng</a>
+        </div>
+      </div>
+      <div>
+        <div style="font-weight:800; color:#1A1A1A; font-size:17px; margin-bottom:18px;">Đối tác</div>
+        <div style="display:grid; grid-template-columns:repeat(2,1fr); align-items:center; gap:22px 18px;">
+          <img src="assets/logo-viettel.png" alt="Viettel" style="height:54px; width:auto; object-fit:contain;">
+          <img src="assets/logo-mbbank.png" alt="MB Bank" style="height:56px; width:auto; object-fit:contain;">
+          <img src="assets/logo-9pay.png" alt="9Pay" style="height:64px; width:auto; object-fit:contain;">
+          <img src="assets/logo-momo.png" alt="MoMo" style="height:62px; width:auto; object-fit:contain;">
+        </div>
+      </div>
+      <div>
+        <div style="font-weight:800; color:#1A1A1A; font-size:17px; margin-bottom:18px;">Liên hệ</div>
+        <div style="display:flex; flex-direction:column; gap:18px; font-size:15.5px; color:#5A5A5A; font-weight:600; line-height:1.55;">
+          <div style="display:flex; gap:12px; align-items:flex-start;"><span style="width:34px; height:34px; border-radius:50%; background:#FDE8EA; color:#C8102E; display:flex; align-items:center; justify-content:center; flex-shrink:0;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"></path><circle cx="12" cy="10" r="3"></circle></svg></span><span>Helios Tower, 75 Tam Trinh,<br>Phường Vĩnh Tuy, Quận Hoàng Mai,<br>Hà Nội</span></div>
+          <div style="display:flex; gap:12px; align-items:center;"><span style="width:34px; height:34px; border-radius:50%; background:#FDE8EA; color:#C8102E; display:flex; align-items:center; justify-content:center; flex-shrink:0;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg></span><span>Tư vấn bán hàng: <a href="tel:0976672698" style="color:inherit; font-weight:800; text-decoration:underline;">0976.672.698</a></span></div>
+          <div style="display:flex; gap:12px; align-items:flex-start;"><span style="width:34px; height:34px; border-radius:50%; background:#FDE8EA; color:#C8102E; display:flex; align-items:center; justify-content:center; flex-shrink:0;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 3"></path></svg></span><span>Hoạt động 8:00 - 22:00<br>Thứ 2 — Thứ 7</span></div>
+        </div>
+      </div>
+    </div>
+    <div style="max-width:1280px; margin:44px auto 0; padding-top:22px; border-top:1px solid #F0E3E4; font-size:12.5px; color:#9A9A9A; text-align:center;">
+      © 2026 Hako Group. Tất cả các quyền được bảo lưu.
+    </div>
+  </footer>
+
+  <!-- ============ FLOATING TRIGGER + CONTACT BUBBLES ============ -->
+  <div data-rg="floating" style="position:fixed; left:28px; bottom:28px; z-index:90; opacity:{{ floatingCtaOpacity }}; pointer-events:{{ floatingCtaPointer }}; transition:opacity .25s ease, transform .2s ease;">
+    <button onClick="{{ openModal }}" style="background:linear-gradient(155deg,#E8323E,#A50D24); color:#fff; font-weight:700; font-size:14.5px; padding:16px 26px 16px 20px; border-radius:100px; border:1.5px solid rgba(255,255,255,0.25); cursor:pointer; box-shadow:0 16px 34px -10px rgba(138,15,36,0.55), inset 0 1px 0 rgba(255,255,255,0.2); display:flex; align-items:center; gap:10px; transition:transform .18s ease, box-shadow .18s ease;" style-hover="transform:translateY(-3px); box-shadow:0 20px 40px -8px rgba(138,15,36,0.6), inset 0 1px 0 rgba(255,255,255,0.25);">
+      <span style="width:26px; height:26px; border-radius:50%; background:rgba(255,255,255,0.18); display:flex; align-items:center; justify-content:center; flex-shrink:0;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12v9H4v-9"></path><path d="M2 7h20v5H2z"></path><path d="M12 22V7"></path><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"></path><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"></path></svg></span><span>Nhận báo giá &amp; dùng thử ngay</span>
+    </button>
+  </div>
+
+  <div style="position:fixed; right:24px; bottom:28px; z-index:90; display:flex; flex-direction:column; gap:12px; align-items:flex-end;">
+    <a href="https://zalo.me/0976672698" target="_blank" aria-label="Chat Zalo" style="display:flex; align-items:center; justify-content:center; background:#fff; width:52px; height:52px; border-radius:16px; box-shadow:0 10px 24px -6px rgba(0,104,255,0.45); border:1px solid #E3EEFF; padding:6px; overflow:hidden;"><svg width="40" height="40" viewBox="0 0 48 48"><rect x="0" y="0" width="48" height="48" rx="11" fill="#0068FF"></rect><text x="24" y="30" text-anchor="middle" font-family="Arial, sans-serif" font-weight="700" font-size="16" fill="#ffffff">Zalo</text></svg></a>
+    <div style="position:relative;">
+      <sc-if value="{{ showHotline }}" hint-placeholder-val="{{ false }}">
+        <div style="position:absolute; right:60px; bottom:8px; background:#1A1A1A; color:#fff; font-weight:800; font-size:14.5px; padding:12px 18px; border-radius:12px; white-space:nowrap; box-shadow:0 12px 28px -10px rgba(0,0,0,0.4);"><a href="tel:0976672698" style="color:#fff; text-decoration:none;">📞 0976.672.698</a><div style="position:absolute; right:-6px; bottom:16px; width:12px; height:12px; background:#1A1A1A; transform:rotate(45deg);"></div></div>
+      </sc-if>
+      <button onClick="{{ toggleHotline }}" aria-label="Hotline" style="display:flex; align-items:center; justify-content:center; background:#C8102E; color:#fff; width:52px; height:52px; border-radius:100px; border:none; cursor:pointer; box-shadow:0 10px 24px -6px rgba(200,16,46,0.5);"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg></button>
+    </div>
+  </div>
+
+  <!-- ============ MODAL: BÁO GIÁ & DÙNG THỬ NGAY ============ -->
+  <sc-if value="{{ modalOpen }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed; inset:0; z-index:100; background:rgba(20,10,11,0.55); display:flex; align-items:center; justify-content:center; padding:24px;">
+      <div data-rg="modal" style="background:#fff; border-radius:24px; overflow:hidden; max-width:980px; width:100%; max-height:92vh; display:grid; grid-template-columns:1.1fr 1fr; box-shadow:0 60px 120px -30px rgba(0,0,0,0.5); position:relative;">
+        <button onClick="{{ closeModal }}" style="position:absolute; top:16px; right:16px; z-index:2; width:34px; height:34px; border-radius:50%; background:rgba(255,255,255,0.9); border:1px solid #eee; font-size:16px; color:#3A3A3A; cursor:pointer;">✕</button>
+
+        <!-- left promo panel -->
+        <div style="background:linear-gradient(160deg,#D91E36,#7E0A19); padding:38px 34px; color:#fff; display:flex; flex-direction:column; overflow-y:auto;">
+          <div style="display:inline-flex; align-self:flex-start; align-items:center; gap:8px; background:#FFC94B; color:#4A3200; font-weight:800; font-size:13px; padding:8px 16px; border-radius:100px; margin-bottom:22px;">ĐỪNG BỎ LỠ!</div>
+          <div style="display:flex; flex-direction:column; gap:14px; margin-bottom:30px;">
+            <div style="display:flex; gap:10px; align-items:flex-start; font-size:14.5px; line-height:1.5;"><span style="color:#4ADE80; font-weight:800;">✔</span><span>Miễn phí toàn bộ tính năng trong 10 ngày dùng thử</span></div>
+            <div style="display:flex; gap:10px; align-items:flex-start; font-size:14.5px; line-height:1.5;"><span style="color:#4ADE80; font-weight:800;">✔</span><span>Demo trực tiếp cùng chuyên viên tư vấn trong 10 phút</span></div>
+            <div style="display:flex; gap:10px; align-items:flex-start; font-size:14.5px; line-height:1.5;"><span style="color:#4ADE80; font-weight:800;">✔</span><span>Hỗ trợ cài đặt, nhập dữ liệu &amp; đào tạo tận nơi</span></div>
+            <div style="display:flex; gap:10px; align-items:flex-start; font-size:14.5px; line-height:1.5;"><span style="color:#4ADE80; font-weight:800;">✔</span><span>Nhận báo giá combo thiết bị ưu đãi riêng</span></div>
+          </div>
+          <div style="width:100%; aspect-ratio:16/11; border-radius:16px; overflow:hidden; border:1px solid rgba(255,255,255,0.18); margin-bottom:26px; background:#fff; display:flex; align-items:center; justify-content:center;">
+            <img src="assets/hero-pos-photo.png" alt="Máy POS Hako và nhân viên bán hàng" style="width:100%; height:100%; object-fit:contain; display:block;">
+          </div>
+          <div style="margin-top:auto;">
+            <div style="font-size:28px; font-weight:900; margin-bottom:4px;">5.000+</div>
+            <div style="font-size:13px; color:#FBDADD; font-weight:600;">Cửa hàng đang tin dùng Hako POS</div>
+          </div>
+        </div>
+
+        <!-- right form panel -->
+        <div style="padding:38px 34px; overflow-y:auto;">
+          <div style="font-weight:900; font-size:21px; color:#1A1A1A; margin-bottom:6px;">Báo giá &amp; dùng thử ngay</div>
+          <div style="display:inline-flex; align-items:center; gap:8px; background:#FFF3E0; color:#B45300; font-weight:700; font-size:12.5px; padding:7px 14px; border-radius:100px; margin-bottom:24px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M13 2 3 14h7l-1 8 10-12h-7l1-8z"></path></svg> Chỉ 10 giây — nhận demo toàn bộ tính năng</div>
+          <div data-rg="1" style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px;">
+            <input id="hako-f2-name" type="text" placeholder="Họ và tên *" style="width:100%; padding:12px 14px; border-radius:9px; border:1px solid #E5E5E5; font-size:14px; font-family:inherit; background:#FAFAFA;">
+            <input id="hako-f2-phone" type="tel" placeholder="Số điện thoại *" style="width:100%; padding:12px 14px; border-radius:9px; border:1px solid #E5E5E5; font-size:14px; font-family:inherit; background:#FAFAFA;">
+          </div>
+          <input id="hako-f2-email" type="email" placeholder="Email *" style="width:100%; padding:12px 14px; border-radius:9px; border:1px solid #E5E5E5; font-size:14px; font-family:inherit; background:#FAFAFA; margin-bottom:12px;">
+          <select id="hako-f2-category" style="width:100%; padding:12px 14px; border-radius:9px; border:1px solid #E5E5E5; font-size:14px; font-family:inherit; background:#FAFAFA; color:#5A5A5A; margin-bottom:12px;">
+            <option>Loại hình kinh doanh *</option>
+            <option>Bán buôn, bán lẻ</option>
+            <option>Ăn uống, giải trí</option>
+            <option>Sức khỏe, làm đẹp</option>
+            <option>Khách sạn, nhà nghỉ</option>
+            <option>Khác</option>
+          </select>
+          <select id="hako-f2-city" style="width:100%; padding:12px 14px; border-radius:9px; border:1px solid #E5E5E5; font-size:14px; font-family:inherit; background:#FAFAFA; color:#5A5A5A; margin-bottom:20px;">
+            <option>Tỉnh/Thành phố *</option>
+            <option>Hà Nội</option>
+            <option>TP. Hồ Chí Minh</option>
+            <option>Đà Nẵng</option>
+            <option>Khác</option>
+          </select>
+          <label style="display:flex; align-items:flex-start; gap:8px; font-size:13px; color:#8A8A8A; margin-bottom:20px; line-height:1.5;">
+            <input type="checkbox" style="margin-top:2px;">
+            <span>Tôi đồng ý với <a href="#tu-van">Chính sách bảo vệ dữ liệu cá nhân</a> của Hako Group</span>
+          </label>
+          <div id="hako-f2-msg" style="font-size:13px; font-weight:600; margin-bottom:10px; display:none;"></div>
+          <button id="hako-f2-btn" type="button" onclick="hakoSubmitLead(2)" style="width:100%; background:#C8102E; color:#fff; font-weight:700; font-size:16px; padding:15px; border-radius:10px; border:none; cursor:pointer; box-shadow:0 12px 26px -8px rgba(200,16,46,0.45);">Nhận báo giá &amp; demo miễn phí</button>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { modalOpen: false, activeTab: null, activeIndustry: null, showHotline: false, scrolledPastHero: false };
+
+  componentDidMount() {
+    this._onScroll = () => {
+      const past = window.scrollY > 320;
+      if (past !== this.state.scrolledPastHero) this.setState({ scrolledPastHero: past });
+    };
+    window.addEventListener('scroll', this._onScroll, { passive: true });
+    this._onScroll();
+  }
+
+  componentWillUnmount() {
+    if (this._onScroll) window.removeEventListener('scroll', this._onScroll);
+  }
+  renderVals() {
+    const setTab = (tab) => (e) => { if (e && e.preventDefault) e.preventDefault(); this.setState({ activeTab: tab, activeIndustry: null, scrolledPastHero: false }); window.scrollTo(0, 0); };
+    const goHomeThenScrollTo = (id) => (e) => {
+      if (e && e.preventDefault) e.preventDefault();
+      this.setState({ activeTab: null, activeIndustry: null });
+      setTimeout(() => {
+        const el = document.getElementById(id);
+        if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 70 });
+      }, 60);
+    };
+    const goIndustry = (key) => (e) => { if (e && e.preventDefault) e.preventDefault(); this.setState({ activeTab: 'nganh-hang', activeIndustry: key }); window.scrollTo(0, 0); };
+    const openModalClick = (e) => { if (e && e.preventDefault) e.preventDefault(); this.setState({ modalOpen: true }); };
+    return {
+      goDoiTac: goHomeThenScrollTo('doi-tac'),
+      goLienHe: goHomeThenScrollTo('tu-van'),
+      modalOpen: this.state.modalOpen,
+      openModal: () => this.setState({ modalOpen: true }),
+      openModalClick,
+      closeModal: () => this.setState({ modalOpen: false }),
+      showHotline: this.state.showHotline,
+      floatingCtaOpacity: this.state.scrolledPastHero ? 1 : 0,
+      floatingCtaPointer: this.state.scrolledPastHero ? 'auto' : 'none',
+      toggleHotline: () => this.setState(s => ({ showHotline: !s.showHotline })),
+      isHome: this.state.activeTab === null,
+      isGioiThieu: this.state.activeTab === 'gioi-thieu',
+      goGioiThieu: setTab('gioi-thieu'),
+      pillGioiThieu: this.state.activeTab === 'gioi-thieu' ? 'color:#C8102E; background:#FDE8EA;' : 'color:#232323; background:transparent;',
+      hoverGioiThieu: (this.state.activeTab === 'gioi-thieu' ? 'color:#C8102E;' : 'color:#C8102E; background:#FAFAFA;') + ' transform:translateY(-3px);',
+      isNganhHang: this.state.activeTab === 'nganh-hang',
+      isBangGia: this.state.activeTab === 'bang-gia',
+      isTinhNang: this.state.activeTab === 'tinh-nang',
+      isNganhHangList: this.state.activeTab === 'nganh-hang' && !this.state.activeIndustry,
+      isNganhHangDetail: this.state.activeTab === 'nganh-hang' && !!this.state.activeIndustry,
+      isIndustryBanLe: this.state.activeIndustry === 'ban-le',
+      isIndustryFnb: this.state.activeIndustry === 'fnb',
+      isIndustryKhachSan: this.state.activeIndustry === 'khach-san',
+      isIndustryLamDep: this.state.activeIndustry === 'lam-dep',
+      goIndustryBanLe: goIndustry('ban-le'),
+      goIndustryFnb: goIndustry('fnb'),
+      goIndustryKhachSan: goIndustry('khach-san'),
+      goIndustryLamDep: goIndustry('lam-dep'),
+      backToNganhHangList: (e) => { if (e && e.preventDefault) e.preventDefault(); this.setState({ activeIndustry: null }); window.scrollTo(0, 0); },
+      goNganhHang: setTab('nganh-hang'),
+      goBangGia: setTab('bang-gia'),
+      goTinhNang: setTab('tinh-nang'),
+      goHome: setTab(null),
+      pillNganhHang: this.state.activeTab === 'nganh-hang' ? 'color:#C8102E; background:#FDE8EA;' : 'color:#232323; background:transparent;',
+      pillBangGia: this.state.activeTab === 'bang-gia' ? 'color:#C8102E; background:#FDE8EA;' : 'color:#232323; background:transparent;',
+      pillTinhNang: this.state.activeTab === 'tinh-nang' ? 'color:#C8102E; background:#FDE8EA;' : 'color:#232323; background:transparent;',
+      hoverNganhHang: (this.state.activeTab === 'nganh-hang' ? 'color:#C8102E;' : 'color:#C8102E; background:#FAFAFA;') + ' transform:translateY(-3px);',
+      hoverBangGia: (this.state.activeTab === 'bang-gia' ? 'color:#C8102E;' : 'color:#C8102E; background:#FAFAFA;') + ' transform:translateY(-3px);',
+      hoverTinhNang: (this.state.activeTab === 'tinh-nang' ? 'color:#C8102E;' : 'color:#C8102E; background:#FAFAFA;') + ' transform:translateY(-3px);',
+    };
+  }
+}
+</script>
+<script>
+document.addEventListener('click', function (e) {
+  if (e.target.closest('#hk-menu-btn')) {
+    document.body.classList.toggle('hk-menu-open');
+  } else if (e.target.closest('header nav a') || !e.target.closest('header')) {
+    document.body.classList.remove('hk-menu-open');
+  }
+});
+document.addEventListener('click', function (e) {
+  var hot = e.target.closest('button[aria-label="Hotline"]');
+  if (hot && window.innerWidth <= 860) {
+    window.location.href = 'tel:0976672698';
+  }
+}, true);
+window.addEventListener('resize', function () {
+  if (window.innerWidth > 860) document.body.classList.remove('hk-menu-open');
+});
+</script>
+<script>
+// Gửi dữ liệu Form đăng ký (1 = form giữa trang, 2 = form popup) thẳng vào CRM HakoGroup qua Edge Function.
+// Không cần đăng nhập gì cả — endpoint này công khai, chỉ nhận tên + SĐT (+ các trường khác nếu có).
+var HAKO_LEAD_ENDPOINT = 'https://zegmmgflkecqcwkgcsdd.supabase.co/functions/v1/submit-lead';
+
+function hakoShowMsg(el, text, isError) {
+  if (!el) return;
+  el.textContent = text;
+  el.style.display = 'block';
+  el.style.color = isError ? '#C8102E' : '#1F9254';
+}
+
+function hakoSelectVal(el) {
+  // Bỏ qua nếu người dùng chưa chọn gì (còn đang hiện dòng tiêu đề mặc định của select)
+  if (!el || el.selectedIndex <= 0) return '';
+  return el.value;
+}
+
+async function hakoSubmitLead(formNum) {
+  var isF1 = formNum === 1;
+  var nameEl = document.getElementById(isF1 ? 'hako-f1-name' : 'hako-f2-name');
+  var phoneEl = document.getElementById(isF1 ? 'hako-f1-phone' : 'hako-f2-phone');
+  var shopEl = isF1 ? document.getElementById('hako-f1-shop') : null;
+  var emailEl = isF1 ? null : document.getElementById('hako-f2-email');
+  var categoryEl = document.getElementById(isF1 ? 'hako-f1-category' : 'hako-f2-category');
+  var cityEl = isF1 ? null : document.getElementById('hako-f2-city');
+  var msgEl = document.getElementById(isF1 ? 'hako-f1-msg' : 'hako-f2-msg');
+  var btnEl = document.getElementById(isF1 ? 'hako-f1-btn' : 'hako-f2-btn');
+
+  var name = (nameEl && nameEl.value || '').trim();
+  var phone = (phoneEl && phoneEl.value || '').replace(/\D/g, '');
+
+  if (!name) { hakoShowMsg(msgEl, 'Vui lòng nhập họ và tên.', true); return; }
+  if (phone.length !== 10) { hakoShowMsg(msgEl, 'Số điện thoại phải đúng 10 chữ số.', true); return; }
+
+  var payload = {
+    name: name,
+    phone: phone,
+    email: emailEl ? emailEl.value.trim() : '',
+    businessType: hakoSelectVal(categoryEl) || (shopEl ? '' : ''),
+    city: cityEl ? hakoSelectVal(cityEl) : '',
+    message: shopEl ? ('Tên cửa hàng/doanh nghiệp: ' + shopEl.value.trim()) : '',
+  };
+
+  var originalBtnText = btnEl ? btnEl.textContent : '';
+  if (btnEl) { btnEl.disabled = true; btnEl.textContent = 'Đang gửi...'; }
+  hakoShowMsg(msgEl, '', false);
+  msgEl && (msgEl.style.display = 'none');
+
+  try {
+    var res = await fetch(HAKO_LEAD_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    var data = await res.json();
+    if (data.ok) {
+      hakoShowMsg(msgEl, '✔ Gửi thành công! Chúng tôi sẽ liên hệ lại sớm nhất.', false);
+      if (nameEl) nameEl.value = '';
+      if (phoneEl) phoneEl.value = '';
+      if (shopEl) shopEl.value = '';
+      if (emailEl) emailEl.value = '';
+    } else {
+      hakoShowMsg(msgEl, data.error || 'Có lỗi xảy ra, vui lòng thử lại.', true);
+    }
+  } catch (err) {
+    hakoShowMsg(msgEl, 'Không kết nối được, vui lòng thử lại hoặc gọi hotline 0976.672.698.', true);
+  } finally {
+    if (btnEl) { btnEl.disabled = false; btnEl.textContent = originalBtnText; }
+  }
+}
+</script>
+</body>
+</html>

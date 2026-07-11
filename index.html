@@ -1,9 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="utf-8"><title>Hako Group - Phần mềm quản lý bán hàng HakoPOS</title>
-<link rel="icon" type="image/png" href="./assets/hako-logo.png">
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hako Group - Phần mềm quản lý bán hàng HakoPOS</title>
+<link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon-32.png">
+<link rel="icon" type="image/png" sizes="512x512" href="./assets/hako-logo.png">
+<link rel="apple-touch-icon" href="./assets/apple-touch-icon.png">
 <script src="./support.js"></script>
 </head>
 <body>
@@ -53,6 +56,50 @@
   @media (max-width: 560px) {
     h1 { font-size: 28px !important; }
     nav a { font-size: 13.5px !important; padding: 8px 12px !important; }
+  }
+
+  /* ============ TỐI ƯU MOBILE BỔ SUNG ============ */
+  @media (max-width: 860px) {
+    /* Header gọn 1 hàng, menu trượt ngang được */
+    header { padding: 10px 14px !important; gap: 10px !important; }
+    header img[alt="Hako Group"] { height: 38px !important; }
+    header > div:first-child span { font-size: 20px !important; }
+    header nav {
+      flex-wrap: nowrap !important;
+      overflow-x: auto !important;
+      justify-content: flex-start !important;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    header nav::-webkit-scrollbar { display: none; }
+    header nav a { font-size: 15px !important; padding: 8px 13px !important; flex-shrink: 0; }
+
+    /* Các lưới nhiều cột co lại cho vừa màn hình dọc */
+    [style*="grid-template-columns:repeat(3,1fr)"] { grid-template-columns: 1fr !important; }
+    [style*="grid-template-columns:repeat(4,1fr)"],
+    [style*="grid-template-columns:repeat(5,1fr)"] { grid-template-columns: repeat(2,1fr) !important; }
+    [style*="grid-template-columns:1fr 1fr"],
+    [style*="grid-template-columns:1.05fr 0.95fr"],
+    [style*="grid-template-columns:1.1fr 1fr"],
+    [style*="grid-template-columns:1.3fr 0.85fr 0.95fr 1.35fr"] { grid-template-columns: 1fr !important; }
+
+    /* Ảnh không tràn ngang, khoảng cách hợp lý hơn */
+    img { max-width: 100%; }
+    section { padding-top: 40px !important; padding-bottom: 56px !important; }
+    [style*="gap:40px"], [style*="gap:44px"], [style*="gap:48px"], [style*="gap:56px"] { gap: 24px !important; }
+    footer { padding: 44px 20px 24px !important; }
+  }
+
+  @media (max-width: 560px) {
+    header > div:first-child span { font-size: 18px !important; }
+    /* Nút ở hero xếp dọc, rộng hết cỡ cho dễ bấm */
+    [data-rg="hero-actions"] { flex-direction: column; align-items: stretch !important; gap: 12px !important; }
+    [data-rg="hero-actions"] > * { width: 100% !important; text-align: center; justify-content: center !important; }
+    [data-rg="hero-stats"] { gap: 18px !important; }
+    /* Lưới 4-5 cột chỉ còn 2 cột nhỏ gọn */
+    [style*="grid-template-columns:repeat(4,1fr)"],
+    [style*="grid-template-columns:repeat(5,1fr)"] { gap: 14px !important; }
+    section { padding-left: 16px !important; padding-right: 16px !important; }
   }
 </style>
 </helmet>
